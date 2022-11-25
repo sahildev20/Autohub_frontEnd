@@ -2,6 +2,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native';
+import SearchView from '../components/SearchView';
+import BookingScreen from '../screens/BookingScreen/BookingScreen.js';
+import DriversScreen from '../screens/DriversScreen/DriversScreen.js';
+import HomeScreen from '../screens/Homescreen/HomeScreen.js';
+
 
 const Stack = createNativeStackNavigator();
 
