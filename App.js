@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * Sample React Native App
  * @format
@@ -11,6 +12,8 @@ import NotificationScreen from './src/screens/NotificationScreen/NotificationScr
 import {Provider} from 'react-redux';
 import store from './src/store.js';
 import SearchView from './src/components/SearchView.js';
+import BookingScreen from './src/screens/BookingScreen/BookingScreen.js';
+import DriversScreen from './src/screens/DriversScreen/DriversScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +27,8 @@ const App = () => {
           }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Search" component={SearchView} />
-          <Stack.Screen name="Notifications" component={NotificationScreen} />
+          <Stack.Screen name="Booking" component={BookingScreen} />
+          <Stack.Screen name="Drivers" component={DriversScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
