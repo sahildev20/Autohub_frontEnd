@@ -22,7 +22,9 @@ const SearchView = () => {
                     language: 'en', // language of the results
                 }} />
             <Text style={tw`text-6 p-3 mt-20`}>  {MAPS_API_KEY}We will set up search view here where user can search for different location.</Text>
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={tw`rounded-full p-3 bg-orange-500 mt-5`}><Text>Ahh ! You can go back</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Home', {
+                condition: false
+            })} style={tw`rounded-full p-3 bg-orange-500 mt-5`}><Text>Ahh ! You can go back</Text></TouchableOpacity>
         </SafeAreaView>
     );
 };

@@ -12,9 +12,10 @@ import {
 import UserLocation from '../../components/UserLocation';
 
 import tw from 'twrnc';
-const condition = false;
+let condition = true;
 const dropisempty = false;
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
+
   return (
     <SafeAreaView style={tw`flex-1`}>
       {condition === true ? (

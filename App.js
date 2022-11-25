@@ -7,12 +7,12 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import store from './src/store.js';
-import StackNavigator from './src/navigation/StackNavigator.js';
+import TabNavigator from './src/navigation/TabNavigator.js';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <StackNavigator />
+      <TabNavigator />
     </Provider>
   );
 };

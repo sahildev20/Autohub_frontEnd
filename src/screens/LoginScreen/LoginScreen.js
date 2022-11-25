@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import MapVieww from '../../components/MapView';
 
-const HistoryScreen = () => {
+const LoginScreen = () => {
     return (
         <View>
-            <MapVieww />
+            <Text>LoginScreen</Text>
         </View>
     );
 }
 
-export default HistoryScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({});
+
