@@ -2,7 +2,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  user: null,
+  user: '',
   pickupAddress: null,
   dropAddress: null,
   rideInformation: null,

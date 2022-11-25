@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import MapVieww from '../../components/MapView';
-
 const HistoryScreen = () => {
     return (
         <View>
-            <MapVieww />
+            <Text>HistoryScreen</Text>
         </View>
     );
 }

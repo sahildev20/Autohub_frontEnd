@@ -5,7 +5,7 @@ import React from 'react';
 import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { MAPS_API_KEY, Hello_w } from "@env";
+import { MAPS_API_KEY } from "@env";
 
 
 const SearchView = () => {
@@ -22,8 +22,8 @@ const SearchView = () => {
                     language: 'en', // language of the results
                 }} />
             <Text style={tw`text-6 p-3 mt-20`}>  {MAPS_API_KEY}We will set up search view here where user can search for different location.</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Home', {
-                condition: false
+            <TouchableOpacity onPress={() => navigation.navigate('Booking', {
+                initialLocation: 'Mewat Engg College'
             })} style={tw`rounded-full p-3 bg-orange-500 mt-5`}><Text>Ahh ! You can go back</Text></TouchableOpacity>
         </SafeAreaView>
     );

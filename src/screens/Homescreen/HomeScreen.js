@@ -10,20 +10,22 @@ import {
   StyleSheet, Button,
 } from 'react-native';
 import UserLocation from '../../components/UserLocation';
-
 import tw from 'twrnc';
-let condition = true;
-const dropisempty = false;
-const HomeScreen = ({ route, navigation }) => {
+import MapComponent from '../../components/MapComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPickupAddress } from '../../slices/navSlice';
 
+const HomeScreen = ({ route, navigation }) => {
+  const pickupAddress = useSelector(selectPickupAddress);
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      {condition === true ? (
+    <SafeAreaView style={styles.homecontainer}>
+      {pickupAddress == null ? (
         <UserLocation />
       ) : (
-        <ImageBackground
-          style={styles.homeimage}
-          source={require('./assets/maps.png')}>
+          <View style={styles.homecontainer}>
+            <View style={styles.homecontainer}>
+              <MapComponent style={{ flex: 1 }} />
+            </View>
           <View style={styles.root}>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.text}>Current Location</Text>
@@ -37,14 +39,16 @@ const HomeScreen = ({ route, navigation }) => {
 
               </View>
           </View>
-        </ImageBackground>
+          </View>
+
+
       )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  homeimage: { flex: 1, justifyContent: 'flex-end', alignContent: 'flex-end' },
+  homecontainer: { flex: 1, justifyContent: 'flex-end', alignContent: 'flex-end' },
   root: {
     height: 200,
     padding: 15,
