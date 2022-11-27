@@ -2,16 +2,16 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  user: '',
-  pickupAddress: null,
-  dropAddress: null,
-  rideInformation: null,
+  user: [],
+  pickupAddress: ["sahil", `009`, `980`],
+  dropAddress: [],
+  rideInformation: [],
 };
 
 export const navSlice = createSlice({
     name: 'nav',
     initialState,
-    reducer: {
+  reducers: {
       setUser :(state, action) => {
         state.user = action.payload;
       },

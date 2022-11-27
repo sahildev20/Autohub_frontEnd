@@ -1,12 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import MapboxGL from '@rnmapbox/maps';
-import { MAPBOX_API, comment } from '@env'
+import { MAPBOX_API, comment } from '@env';
+import { useSelector } from 'react-redux';
+import { selectPickupAddress } from '../slices/navSlice';
+
 
 MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(MAPBOX_API);
+
 const MapComponent = () => {
-    const myLocation = [76.9799513, 28.1231292];
+
+    const myLocation1 = [76.9799513, 28.1231292];
+    const myLocation = useSelector(selectPickupAddress);
     const myHome = []
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
