@@ -7,6 +7,8 @@ import BookingScreen from '../screens/BookingScreen/BookingScreen.js';
 import DriversScreen from '../screens/DriversScreen/DriversScreen.js';
 import HomeScreen from '../screens/Homescreen/HomeScreen.js';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
+import AvailableAutos from '../components/AvailableAutos';
+import TrackRideScreen from '../screens/TrackRideScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +25,8 @@ const StackNavigator = () => {
             <Stack.Screen name="Booking" component={BookingScreen} />
             <Stack.Screen name="Drivers" component={DriversScreen} />
             <Stack.Screen name="Register" component={LoginScreen} />
+            <Stack.Screen name="selectAuto" component={AvailableAutos} />
+            <Stack.Screen name="trackRide" component={TrackRideScreen} />
 
         </Stack.Navigator>
     )
