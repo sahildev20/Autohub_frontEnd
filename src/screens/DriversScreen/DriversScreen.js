@@ -2,7 +2,7 @@
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
-import { Avatar } from 'react-native-elements';
+import {Avatar} from '@rneui/themed';
 
 
 const DATA = [

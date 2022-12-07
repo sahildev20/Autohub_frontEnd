@@ -6,24 +6,25 @@ import {
   TouchableOpacity,
   View,
   Text,
-  StyleSheet, Button,
+  StyleSheet,
+  Button,
 } from 'react-native';
-import { MAPBOX_API } from "@env";
+import {MAPBOX_API} from '@env';
 import UserLocation from '../../components/UserLocation';
 import tw from 'twrnc';
 import MapComponent from '../../components/MapComponent';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   selectDropPlace,
   selectEmptyLocation,
   selectPickupAddress,
   selectPickupPlace,
-  setPickupPlace
+  setPickupPlace,
 } from '../../slices/navSlice';
+import {Mybutton} from '../../components/small/MyUiComponents';
 
 // Main functional component return by this screen
-const HomeScreen = ({ route, navigation }) => {
-
+const HomeScreen = ({route, navigation}) => {
   //Getting values from slice using selector
   const emptyLocation = useSelector(selectEmptyLocation);
   const pickupAddress = useSelector(selectPickupAddress);
@@ -31,14 +32,15 @@ const HomeScreen = ({ route, navigation }) => {
   const dropPlace = useSelector(selectDropPlace);
   const dispatch = useDispatch();
 
-  const getPlaceName = async (p) => {
+  const getPlaceName = async p => {
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${p[0]}, ${p[1]}.json?access_token=${MAPBOX_API}`);
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${p[0]}, ${p[1]}.json?access_token=${MAPBOX_API}`,
+      );
       const json = await response.json();
       // setPickupAddress(json);
-      let title = json.features[0].place_name
-      dispatch(setPickupPlace(title))
+      let title = json.features[0].place_name;
+      dispatch(setPickupPlace(title));
       console.log('data : ', title);
     } catch (error) {
       console.error(error);
@@ -46,48 +48,49 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   React.useEffect(() => {
-    getPlaceName(pickupAddress)
-    console.log("fropplace:", dropPlace)
+    getPlaceName(pickupAddress);
+    console.log('fropplace:', dropPlace);
   }, [pickupAddress]);
 
   return (
     <SafeAreaView style={styles.homecontainer}>
-
       {emptyLocation === 1 ? (
         <UserLocation />
       ) : (
+        <View style={styles.homecontainer}>
           <View style={styles.homecontainer}>
-            <View style={styles.homecontainer}>
-              <MapComponent style={{ flex: 1 }} />
-            </View>
+            <MapComponent style={{flex: 1}} />
+          </View>
           <View style={styles.root}>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Search', { target: 'pickup' })}
-                style={styles.button}>
-                <Text style={styles.text}>{pickupPlace}</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Search', {target: 'pickup'})}
+              style={styles.button}>
+              <Text style={styles.text}>{pickupPlace}</Text>
             </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Search', { target: 'drop' })}
-                style={styles.button}>
-                <Text style={styles.text}>{dropPlace}</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Search', {target: 'drop'})}
+              style={styles.button}>
+              <Text style={styles.text}>{dropPlace}</Text>
             </TouchableOpacity>
-              <View >
-                <Button style={tw`p-5`} title="Next"
-                  onPress={() => navigation.navigate('selectAuto')} />
-
-              </View>
+            <View>
+              <Mybutton
+                title="Next"
+                onPress={() => navigation.navigate('selectAuto')}
+              />
+            </View>
           </View>
-          </View>
-
-
+        </View>
       )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  homecontainer: { flex: 1, justifyContent: 'flex-end', alignContent: 'flex-end' },
+  homecontainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignContent: 'flex-end',
+  },
   root: {
     height: 200,
     padding: 15,
@@ -96,16 +99,17 @@ const styles = StyleSheet.create({
     borderTopWidth: 5,
     borderTopColor: 'orange',
   },
-  text: { fontSize: 14, fontWeight: '600', color: '#000000' },
+  text: {fontSize: 14, fontWeight: '600', color: '#000000'},
   button: {
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 50,
     backgroundColor: 'white',
     padding: 10,
-    width: '95%', height: 40,
+    width: '95%',
+    height: 40,
     marginBottom: 10,
-    shadowOffset: { width: -2, height: 4 },
+    shadowOffset: {width: -2, height: 4},
     shadowRadius: 3,
     shadowColor: '#171717',
     shadowOpacity: 0.3,

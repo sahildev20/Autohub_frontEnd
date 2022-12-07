@@ -7,60 +7,103 @@ import NotificationScreen from '../screens/NotificationScreen/NotificationScreen
 import HistoryScreen from '../screens/HistoryScreen/HistoryScreen';
 import IdeaScreen from '../screens/IdeaScreen/IdeaScreen';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
-import { Ionicons } from 'react-native-vector-icons/Ionicons';
-import { Icon } from 'react-native-elements';
-
+import {Icon} from '@rneui/themed';
+import {
+  orange50,
+  orange500,
+} from 'react-native-paper/lib/typescript/styles/colors';
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
-    return (
-        <NavigationContainer>
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    headerShown: false,
-                    tabBarActiveTintColor: 'tomato',
-                    tabBarInactiveTintColor: 'gray',
-                })}
-            >
-                <Tab.Screen
-                    options={() => ({
-                        tabBarIcon: () => {
-                            return <Icon type='fontawesome' name='home' size={20} />
-                        },
-                    })}
-                    name='Root' component={StackNavigator} />
-                <Tab.Screen
-                    options={() => ({
-                        tabBarIcon: () => {
-                            return <Icon type='fontawesome' name='home' size={20} />
-                        },
-                    })}
-                    name='History' component={HistoryScreen} />
-                <Tab.Screen
-                    options={() => ({
-                        tabBarIcon: () => {
-                            return <Icon type='fontawesome' name='home' size={20} />
-                        },
-                    })}
-                    name='Suggestions' component={IdeaScreen} />
-                <Tab.Screen
-                    options={() => ({
-                        tabBarIcon: () => {
-                            return <Icon type='fontawesome' name='home' size={20} />
-                        },
-                    })}
-                    name='Profile' component={ProfileScreen} />
-                <Tab.Screen
-                    options={() => ({
-                        tabBarIcon: () => {
-                            return <Icon type='fontawesome' name='home' size={20} />
-                        },
-                    })} name='Alerts' component={NotificationScreen} />
-            </Tab.Navigator>
-        </NavigationContainer>
-    );
-}
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          headerShown: false,
+          tabBarActiveTintColor: 'orange',
+          tabBarInactiveTintColor: 'gray',
+          tabBarLabelStyle: {marginBottom: 4},
+        })}>
+        <Tab.Screen
+          options={() => ({
+            tabBarIcon: ({focused}) => {
+              return (
+                <Icon
+                  name="home"
+                  size={25}
+                  color={focused ? 'orange' : 'black'}
+                />
+              );
+            },
+          })}
+          name="Root"
+          component={StackNavigator}
+        />
+        <Tab.Screen
+          options={() => ({
+            tabBarIcon: ({focused}) => {
+              return (
+                <Icon
+                  name="schedule"
+                  size={22}
+                  color={focused ? 'orange' : 'black'}
+                />
+              );
+            },
+          })}
+          name="History"
+          component={HistoryScreen}
+        />
+        <Tab.Screen
+          options={() => ({
+            tabBarIcon: ({focused}) => {
+              return (
+                <Icon
+                  name="lightbulb"
+                  size={22}
+                  color={focused ? 'orange' : 'black'}
+                />
+              );
+            },
+          })}
+          name="Suggestions"
+          component={IdeaScreen}
+        />
+        <Tab.Screen
+          options={() => ({
+            tabBarIcon: ({focused}) => {
+              return (
+                <Icon
+                  name="dashboard"
+                  size={22}
+                  color={focused ? 'orange' : 'black'}
+                />
+              );
+            },
+          })}
+          name="Profile"
+          component={ProfileScreen}
+        />
+        <Tab.Screen
+          options={() => ({
+            tabBarIcon: ({focused}) => {
+              return (
+                <Icon
+                  name="notifications"
+                  size={22}
+                  color={focused ? 'orange' : 'black'}
+                />
+              );
+            },
+          })}
+          name="Alerts"
+          component={NotificationScreen}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default TabNavigator;
 

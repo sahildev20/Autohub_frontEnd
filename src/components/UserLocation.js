@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
 import {
-
   TouchableOpacity,
   View,
   Image,
@@ -10,15 +9,17 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setEmptyLocation, setPickupAddress, setPickupPlace } from '../slices/navSlice';
+import {useDispatch} from 'react-redux';
+import {
+  setEmptyLocation,
+  setPickupAddress,
+  setPickupPlace,
+} from '../slices/navSlice';
 import Geolocation from 'react-native-geolocation-service';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import tw from 'twrnc';
 
-
-const UserLocation = ({ route }) => {
-
+const UserLocation = ({route}) => {
   //Getting values from slice using selector
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -29,34 +30,27 @@ const UserLocation = ({ route }) => {
       //In ios it is being done automatically
 
       if (Platform.OS === 'ios') {
-
         subscribeLocationLocation();
       } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Access Required',
+              message: 'This App needs to Access your location',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            //To Check, If Permission is granted
 
-        if (PermissionsAndroid.RESULTS.GRANTED) {
-          subscribeLocationLocation();
-        } else {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-              {
-                title: 'Location Access Required',
-                message: 'This App needs to Access your location',
-              },
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              //To Check, If Permission is granted
-
-              subscribeLocationLocation();
-            } else {
-            }
-          } catch (err) {
-            console.warn(err);
+            subscribeLocationLocation();
+          } else {
           }
-
+        } catch (err) {
+          console.warn(err);
         }
-        //We need to ask for location permissions on android
 
+        //We need to ask for location permissions on android
       }
     };
     requestLocationPermission();
@@ -65,32 +59,29 @@ const UserLocation = ({ route }) => {
     };
   }, []);
 
-
   const subscribeLocationLocation = async () => {
     watchID = Geolocation.watchPosition(
-      (position) => {
+      position => {
         //Will give you the location on location change
 
         // getting longitude from location
         const currentLongitude = JSON.stringify(position.coords.longitude);
-        console.log("longitude", currentLongitude);
+        console.log('longitude :', currentLongitude);
         //getting the Latitude from the location json
         const currentLatitude = JSON.stringify(position.coords.latitude);
-        console.log("latitude :", currentLatitude)
+        console.log('latitude :', currentLatitude);
         const cordinates = [currentLongitude, currentLatitude];
         try {
           dispatch(setPickupAddress(cordinates));
-
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-
       },
-      (error) => {
-      },
+      error => {},
       {
-        enableHighAccuracy: false,
-        maximumAge: 2000
+        enableHighAccuracy: true,
+        distanceFilter: 50,
+        maximumAge: 2000,
       },
     );
   };
@@ -106,20 +97,26 @@ const UserLocation = ({ route }) => {
             uri: imageUri,
           }}
         />
-        <Text style={tw`text-center font-bold text-7 pt-10 text-black`}>First thing first !</Text>
-        <Text style={tw`text-center font-bold text-4 pt-3 text-black`}>Where you are ?</Text>
-
+        <Text style={tw`text-center font-bold text-7 pt-10 text-black`}>
+          First thing first !
+        </Text>
+        <Text style={tw`text-center font-bold text-4 pt-3 text-black`}>
+          Where you are ?
+        </Text>
       </View>
       <View style={tw`flex-1 justify-end`}>
-        <TouchableOpacity onPress={() => navigation.navigate('Search', { target: 'pickup' })} style={tw`items-center p-3 mb-5`}>
-
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Search', {target: 'pickup'})}
+          style={tw`items-center p-3 mb-5`}>
           <Text style={tw`text-red-500`}>Enter Manually</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => dispatch(setEmptyLocation(0), setPickupPlace('Mumbai'))}
+          onPress={() =>
+            dispatch(setEmptyLocation(0), setPickupPlace('Mumbai'))
+          }
           style={tw`items-center bg-orange-500 rounded-2 p-3 w-90 `}>
-          <Text style={tw`text-18px`} >Enable Location</Text>
+          <Text style={tw`text-18px`}>Enable Location</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -128,5 +125,5 @@ const UserLocation = ({ route }) => {
 export default UserLocation;
 
 const styles = StyleSheet.create({
-  sticker: { width: 200, height: 200, resizeMode: 'contain' },
+  sticker: {width: 200, height: 200, resizeMode: 'contain'},
 });

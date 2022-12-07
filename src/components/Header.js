@@ -1,14 +1,11 @@
 /* eslint-disable prettier/prettier */
 
+import {Icon} from '@rneui/themed';
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 
 const Header = () => {
-    return (
-        <View style={styles.section}>
-            <Text>Header</Text>
-        </View>
-    );
+  return <View style={styles.section}></View>;
 };
 
 const styles = StyleSheet.create({

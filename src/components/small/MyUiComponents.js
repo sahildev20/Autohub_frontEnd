@@ -2,15 +2,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import tw from 'twrnc';
 import React from 'react';
-import { Avatar } from 'react-native-elements';
+import {Avatar} from '@rneui/themed';
 
-
-const Mybutton = ({ title, onPress, color = 'orange', width = 100 }) => {
-    return (<TouchableOpacity
-        onPress={onPress}
-        style={[tw`mt-10 bg-orange-500 rounded-full p-2`, { backgroundColor: color, width: width }]}>
-        <Text style={tw`text-16px font-bold self-center`}>{title}</Text>
-    </TouchableOpacity>);
+const Mybutton = ({title, onPress, color = 'orange', width = 100}) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        tw`mt-4 bg-orange-500 rounded-full p-2`,
+        {backgroundColor: color, width: width},
+      ]}>
+      <Text style={tw`text-16px font-bold self-center`}>{title}</Text>
+    </TouchableOpacity>
+  );
 };
 const MyUiComponents = ({ }) => {
     return (
