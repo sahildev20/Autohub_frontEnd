@@ -41,7 +41,6 @@ const HomeScreen = ({route, navigation}) => {
       // setPickupAddress(json);
       let title = json.features[0].place_name;
       dispatch(setPickupPlace(title));
-      console.log('data : ', title);
     } catch (error) {
       console.error(error);
     }
@@ -49,12 +48,11 @@ const HomeScreen = ({route, navigation}) => {
 
   React.useEffect(() => {
     getPlaceName(pickupAddress);
-    console.log('fropplace:', dropPlace);
   }, [pickupAddress]);
 
   return (
     <SafeAreaView style={styles.homecontainer}>
-      {emptyLocation === 1 ? (
+      {emptyLocation ? (
         <UserLocation />
       ) : (
         <View style={styles.homecontainer}>
@@ -63,12 +61,12 @@ const HomeScreen = ({route, navigation}) => {
           </View>
           <View style={styles.root}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Search', {target: 'pickup'})}
+              onPress={() => navigation.navigate('Search', {isPickup: true})}
               style={styles.button}>
               <Text style={styles.text}>{pickupPlace}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Search', {target: 'drop'})}
+              onPress={() => navigation.navigate('Search', {isPickup: false})}
               style={styles.button}>
               <Text style={styles.text}>{dropPlace}</Text>
             </TouchableOpacity>
@@ -99,7 +97,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 5,
     borderTopColor: 'orange',
   },
-  text: {fontSize: 14, fontWeight: '600', color: '#000000'},
+  text: {fontSize: 14, paddingLeft: 4, fontWeight: '600', color: '#000000'},
   button: {
     alignItems: 'center',
     flexDirection: 'row',

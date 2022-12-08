@@ -2,8 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import MapboxGL from '@rnmapbox/maps';
 import {MAPBOX_API, MBOX_URL} from '@env';
-import {useSelector} from 'react-redux';
-import {selectDropAddress, selectPickupAddress} from '../slices/navSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  selectDropAddress,
+  selectPickupAddress,
+  setRideInformation,
+} from '../slices/navSlice';
 
 MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(MAPBOX_API);
@@ -14,8 +18,10 @@ const pickupCordinates1 = [76.9799513, 28.1231292];
 //Double map will show both pickup and drop location on map...
 const DoubleMapComponent = () => {
   const [routes, setRoutes] = React.useState();
+  const [routeDetails, setRouteDetails] = React.useState();
   const pickupCordinates = useSelector(selectPickupAddress);
   const dropCordinates = useSelector(selectDropAddress);
+  const dispatch = useDispatch();
   // const centerCordinates = [(Number(pickupCordinates[0]) + Number(dropCordinates[0])) / 2,
   // (Number(pickupCordinates[1]) + Number(dropCordinates[1])) / 2];
   const route = {
@@ -47,9 +53,11 @@ const DoubleMapComponent = () => {
       const json = await res.json();
       const data = json.routes[0];
       const routeCoordinates = data.geometry.coordinates;
+      const {distance, duration} = data;
       setRoutes(routeCoordinates);
-      console.log('route 1 data is : ', data);
-      console.log('geometry data is : ', routeCoordinates);
+      setRouteDetails({distance, duration});
+      dispatch(setRideInformation([distance, duration]));
+      console.log('route data : ', {distance, duration});
     } catch (error) {
       console.error(error);
     }
@@ -80,6 +88,7 @@ const DoubleMapComponent = () => {
             zoomLevel={12}
             animated={true}
             animationMode="flyTo"
+            allowUpdates
             centerCoordinate={pickupCordinates}
             animationDuration={1200}
           />
@@ -90,7 +99,14 @@ const DoubleMapComponent = () => {
             id="p"
             key="pickup"
             coordinate={pickupCordinates}
-          />
+            style={{
+              height: 30,
+              width: 30,
+              backgroundColor: '#00cccc',
+              borderColor: '#fff',
+              borderRadius: 50,
+              borderWidth: 3,
+            }}></MapboxGL.PointAnnotation>
           <MapboxGL.PointAnnotation
             id="d"
             key="drop"

@@ -10,12 +10,13 @@ const DATA = [
   {
     id: 1,
     name: 'Shared',
-    label: 'Driver can pickup up 5 passengers',
+    label: 'Driver can pickup upto 5 passengers',
   },
+
   {
     id: 2,
     name: 'Personal',
-    label: 'Driver will not pickup anyone',
+    label: 'Book a personal ride',
   },
 ];
 

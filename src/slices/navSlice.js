@@ -8,7 +8,7 @@ const initialState = {
   dropAddress: [76.9799513, 28.1231292],
   dropPlace: 'hii',
   rideInformation: [],
-  emptyLocation: 1,
+  emptyLocation: true,
 };
 
 export const navSlice = createSlice({

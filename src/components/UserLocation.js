@@ -26,38 +26,38 @@ const UserLocation = ({route}) => {
 
   //To run on app lauch we use useeffect hook
   React.useEffect(() => {
-    const requestLocationPermission = async () => {
-      //In ios it is being done automatically
-
-      if (Platform.OS === 'ios') {
-        subscribeLocationLocation();
-      } else {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: 'Location Access Required',
-              message: 'This App needs to Access your location',
-            },
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            //To Check, If Permission is granted
-
-            subscribeLocationLocation();
-          } else {
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-
-        //We need to ask for location permissions on android
-      }
-    };
-    requestLocationPermission();
+    // requestLocationPermission();
     return () => {
       Geolocation.clearWatch(watchID);
     };
   }, []);
+  const requestLocationPermission = async () => {
+    //In ios it is being done automatically
+
+    if (Platform.OS === 'ios') {
+      subscribeLocationLocation();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Access Required',
+            message: 'AutoHub needs to Access your location',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          //To Check, If Permission is granted
+
+          subscribeLocationLocation();
+        } else {
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+
+      //We need to ask for location permissions on android
+    }
+  };
 
   const subscribeLocationLocation = async () => {
     watchID = Geolocation.watchPosition(
@@ -66,13 +66,12 @@ const UserLocation = ({route}) => {
 
         // getting longitude from location
         const currentLongitude = JSON.stringify(position.coords.longitude);
-        console.log('longitude :', currentLongitude);
         //getting the Latitude from the location json
         const currentLatitude = JSON.stringify(position.coords.latitude);
-        console.log('latitude :', currentLatitude);
         const cordinates = [currentLongitude, currentLatitude];
         try {
           dispatch(setPickupAddress(cordinates));
+          dispatch(setEmptyLocation(false));
         } catch (error) {
           console.log(error);
         }
@@ -112,9 +111,7 @@ const UserLocation = ({route}) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() =>
-            dispatch(setEmptyLocation(0), setPickupPlace('Mumbai'))
-          }
+          onPress={() => requestLocationPermission()}
           style={tw`items-center bg-orange-500 rounded-2 p-3 w-90 `}>
           <Text style={tw`text-18px`}>Enable Location</Text>
         </TouchableOpacity>
