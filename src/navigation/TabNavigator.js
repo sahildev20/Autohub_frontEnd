@@ -12,6 +12,8 @@ import {
   orange50,
   orange500,
 } from 'react-native-paper/lib/typescript/styles/colors';
+import Screen from '../screens/mewat/Screen';
+import {color} from '@rneui/base';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,12 +23,14 @@ const TabNavigator = () => {
       <Tab.Navigator
         screenOptions={({route}) => ({
           headerShown: false,
+          headerTitleStyle: {fontSize: 25, fontWeight: 'bold', marginLeft: 10},
           tabBarActiveTintColor: 'orange',
           tabBarInactiveTintColor: 'gray',
           tabBarLabelStyle: {marginBottom: 4},
         })}>
         <Tab.Screen
           options={() => ({
+            headerShown: false,
             tabBarIcon: ({focused}) => {
               return (
                 <Icon
@@ -97,8 +101,8 @@ const TabNavigator = () => {
               );
             },
           })}
-          name="Alerts"
-          component={NotificationScreen}
+          name="Mec"
+          component={Screen}
         />
       </Tab.Navigator>
     </NavigationContainer>

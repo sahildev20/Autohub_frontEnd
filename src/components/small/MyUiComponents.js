@@ -14,7 +14,7 @@ const Mybutton = ({title, onPress, style, color = 'orange', width = 100}) => {
     <TouchableOpacity
       onPress={onPress}
       style={[
-        tw`mt-4 bg-orange-500 rounded-full p-2`,
+        tw`mt-4 bg-orange-500 rounded-full p-2 self-center`,
         {backgroundColor: color, width: width},
         style,
       ]}>
