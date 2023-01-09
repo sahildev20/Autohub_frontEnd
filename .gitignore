@@ -36,7 +36,10 @@ local.properties
 # node.js
 #
 /backend
+<<<<<<< Updated upstream
 backend/
+=======
+>>>>>>> Stashed changes
 node_modules/
 npm-debug.log
 yarn-error.log
