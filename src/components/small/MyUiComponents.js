@@ -9,7 +9,7 @@ function CustomHeading({text, icon = null, style}) {
     <Text style={[tw`text-7 mt-8 text-black font-bold`, style]}>{text}</Text>
   );
 }
-const Mybutton = ({title, onPress, style, color = 'orange', width = 100}) => {
+const Mybutton = ({title, onPress, style, color = '#FF8A65', width = 100}) => {
   return (
     <TouchableOpacity
       onPress={onPress}

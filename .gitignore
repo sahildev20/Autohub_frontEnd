@@ -27,6 +27,7 @@ ios/.xcode.env.local
 build/
 .idea
 .gradle
+*.rest
 local.properties
 *.iml
 *.hprof
@@ -34,6 +35,7 @@ local.properties
 
 # node.js
 #
+/backend
 backend/
 node_modules/
 npm-debug.log

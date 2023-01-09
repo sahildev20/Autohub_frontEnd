@@ -16,6 +16,7 @@ const BookingScreen = ({route}) => {
   const time = Math.round(rideInformation[1] / 60);
   const {autoid} = route.params;
   const navigation = useNavigation();
+
   return loading ? (
     <>
       <Loading />

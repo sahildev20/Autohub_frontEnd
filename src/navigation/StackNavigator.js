@@ -14,22 +14,31 @@ import TrackRideScreen from '../screens/TrackRideScreen';
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
+
     return (
-
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-            }}>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Search" component={SearchView} />
-            <Stack.Screen name="Booking" component={BookingScreen} />
-            <Stack.Screen name="Drivers" component={DriversScreen} />
-            <Stack.Screen name="Register" component={LoginScreen} />
-            <Stack.Screen name="selectAuto" component={AvailableAutos} />
-            <Stack.Screen name="trackRide" component={TrackRideScreen} />
-
-        </Stack.Navigator>
-    )
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#E8EAF6',
+          },
+        }}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+            headerTitle: 'AUTOHUB',
+          }}
+        />
+        <Stack.Screen name="Search" component={SearchView} />
+        <Stack.Screen name="Booking" component={BookingScreen} />
+        <Stack.Screen name="Drivers" component={DriversScreen} />
+        <Stack.Screen name="Register" component={LoginScreen} />
+        <Stack.Screen name="selectAuto" component={AvailableAutos} />
+        <Stack.Screen name="trackRide" component={TrackRideScreen} />
+      </Stack.Navigator>
+    );
 }
 
 export default StackNavigator

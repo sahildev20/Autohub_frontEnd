@@ -55,7 +55,7 @@ const AvailableAutos = () => {
   //to give some time to map component for loading
   setTimeout(() => {
     setLoading(false);
-  }, 2000);
+  }, 1000);
   ///Main return of Available Auto Screen
 
   return (

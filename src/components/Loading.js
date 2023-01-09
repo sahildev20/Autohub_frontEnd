@@ -7,7 +7,7 @@ const Loading = () => {
     <View style={tw`flex-1 justify-center items-center`}>
       <AnimatedLottieView
         style={{width: 150}}
-        source={require('../assets/97952-loading-animation-blue.json')}
+        source={require('../assets/99833-edupia-loading.json')}
         autoPlay
         loop
         // duration={100}

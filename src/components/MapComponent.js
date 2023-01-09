@@ -80,7 +80,7 @@ const DoubleMapComponent = () => {
           <MapboxGL.ShapeSource id="route1" shape={route}>
             <MapboxGL.LineLayer
               id="route1layer"
-              style={{lineColor: 'orange', lineWidth: 2, lineCap: 'round'}}
+              style={{lineColor: 'orange', lineWidth: 8, lineCap: 'round'}}
             />
           </MapboxGL.ShapeSource>
 
@@ -119,7 +119,6 @@ const DoubleMapComponent = () => {
 };
 const MapComponent = () => {
   const pickupCordinates = useSelector(selectPickupAddress);
-  const dropCordinates = useSelector(selectDropAddress);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -132,11 +131,7 @@ const MapComponent = () => {
           zoomEnabled={true}
           animated={true}
           followUserLocation>
-          <MapboxGL.Camera
-            zoomLevel={12}
-            centerCoordinate={pickupCordinates}
-            followUserLocation
-          />
+          <MapboxGL.Camera zoomLevel={13} centerCoordinate={pickupCordinates} />
           <MapboxGL.PointAnnotation id="point" coordinate={pickupCordinates} />
         </MapboxGL.MapView>
       </View>

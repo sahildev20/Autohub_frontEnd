@@ -18,6 +18,7 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
 import tw from 'twrnc';
+import {Mybutton} from './small/MyUiComponents';
 
 const UserLocation = ({route}) => {
   //Getting values from slice using selector
@@ -109,12 +110,11 @@ const UserLocation = ({route}) => {
           style={tw`items-center p-3 mb-5`}>
           <Text style={tw`text-red-500`}>Enter Manually</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
+        <Mybutton
+          title="Enable Location"
+          width={300}
           onPress={() => requestLocationPermission()}
-          style={tw`items-center bg-orange-500 rounded-2 p-3 w-90 `}>
-          <Text style={tw`text-18px`}>Enable Location</Text>
-        </TouchableOpacity>
+        />
       </View>
     </View>
   );

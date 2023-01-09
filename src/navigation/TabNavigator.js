@@ -24,7 +24,7 @@ const TabNavigator = () => {
         screenOptions={({route}) => ({
           headerShown: false,
           headerTitleStyle: {fontSize: 25, fontWeight: 'bold', marginLeft: 10},
-          tabBarActiveTintColor: 'orange',
+          tabBarActiveTintColor: '#FF7043',
           tabBarInactiveTintColor: 'gray',
           tabBarLabelStyle: {marginBottom: 4},
         })}>
@@ -36,7 +36,7 @@ const TabNavigator = () => {
                 <Icon
                   name="home"
                   size={25}
-                  color={focused ? 'orange' : 'black'}
+                  color={focused ? '#FF7043' : 'black'}
                 />
               );
             },
@@ -51,7 +51,7 @@ const TabNavigator = () => {
                 <Icon
                   name="schedule"
                   size={22}
-                  color={focused ? 'orange' : 'black'}
+                  color={focused ? '#FF7043' : 'black'}
                 />
               );
             },
@@ -66,7 +66,7 @@ const TabNavigator = () => {
                 <Icon
                   name="lightbulb"
                   size={22}
-                  color={focused ? 'orange' : 'black'}
+                  color={focused ? '#FF7043' : 'black'}
                 />
               );
             },
@@ -81,7 +81,7 @@ const TabNavigator = () => {
                 <Icon
                   name="dashboard"
                   size={22}
-                  color={focused ? 'orange' : 'black'}
+                  color={focused ? '#FF7043' : 'black'}
                 />
               );
             },
@@ -96,7 +96,7 @@ const TabNavigator = () => {
                 <Icon
                   name="notifications"
                   size={22}
-                  color={focused ? 'orange' : 'black'}
+                  color={focused ? '#FF7043' : 'black'}
                 />
               );
             },
