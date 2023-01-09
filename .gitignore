@@ -37,7 +37,10 @@ local.properties
 #
 /backend
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 backend/
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 node_modules/
