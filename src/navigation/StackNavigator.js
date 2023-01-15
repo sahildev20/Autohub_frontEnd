@@ -10,6 +10,9 @@ import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import AvailableAutos from '../components/AvailableAutos';
 import TrackRideScreen from '../screens/TrackRideScreen';
 import {LOGO_SMALL} from '../assets';
+import {selectUser} from '../slices/navSlice';
+import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,8 +25,6 @@ const StackNavigator = () => {
           backgroundColor: '#fff',
         },
       }}>
-      <Stack.Screen name="LogIn" component={LoginScreen} />
-
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -39,6 +40,7 @@ const StackNavigator = () => {
           },
         }}
       />
+
       <Stack.Screen name="Search" component={SearchView} />
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Drivers" component={DriversScreen} />

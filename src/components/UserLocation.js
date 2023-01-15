@@ -10,11 +10,7 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {
-  setEmptyLocation,
-  setPickupAddress,
-  setPickupPlace,
-} from '../slices/navSlice';
+import {setEmptyLocation, setPickupAddress} from '../slices/navSlice';
 import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
 import tw from 'twrnc';
