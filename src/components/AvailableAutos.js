@@ -1,4 +1,11 @@
-import {StyleSheet, View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {React, useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {DoubleMapComponent} from './MapComponent';
@@ -6,18 +13,21 @@ import {Avatar} from '@rneui/themed';
 import tw from 'twrnc';
 import {useNavigation} from '@react-navigation/native';
 import Loading from '../components/Loading';
+import {AUTO_IMAGE} from '../assets';
 
 const DATA = [
   {
     id: 1,
     name: 'Shared',
     label: 'Driver can pickup upto 5 passengers',
+    amount: 30,
   },
 
   {
     id: 2,
     name: 'Personal',
     label: 'Book a personal ride',
+    amount: 100,
   },
 ];
 
@@ -35,20 +45,25 @@ const AvailableAutos = () => {
         onPress={() => setSelected(item.id)}
         style={[
           styles.auto,
-          {backgroundColor: selected == item.id ? '#fbb74d' : '#e1e1e1'},
+          {backgroundColor: selected == item.id ? '#fbb74d' : '#DDE2E6'},
         ]}>
-        <Avatar
-          style={[
-            tw`w-80px ml-4 h-80px  rounded-full`,
-            {backgroundColor: selected == item.id ? '#000000' : '#ffffff'},
-          ]}
-        />
+        <View style={[tw`w-60px ml-4 h-60px items-center justify-center`]}>
+          <Image
+            style={{width: 40, height: 40, resizeMode: 'contain'}}
+            source={{
+              uri: AUTO_IMAGE,
+            }}
+          />
+        </View>
         <View style={tw`ml-4`}>
           <Text style={tw`text-20px font-400  text-black font-bold`}>
             {item.name}
           </Text>
           <Text style={tw`text-12px text-black`}>{item.label}</Text>
         </View>
+        {/* <View style={tw`flex items-end justify-end`}>
+          <Text>{item.amount}</Text>
+        </View> */}
       </TouchableOpacity>
     );
   };
@@ -121,7 +136,7 @@ const styles = StyleSheet.create({
   },
   auto: {
     flexDirection: 'row',
-    padding: 4,
+    padding: 8,
     width: '90%',
     borderRadius: 4,
     margin: 8,

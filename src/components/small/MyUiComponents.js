@@ -9,13 +9,13 @@ function CustomHeading({text, icon = null, style}) {
     <Text style={[tw`text-7 mt-8 text-black font-bold`, style]}>{text}</Text>
   );
 }
-const Mybutton = ({title, onPress, style, color = '#FF8A65', width = 100}) => {
+const Mybutton = ({title, onPress, style, color = '#FF8A65', width = 300}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
-        tw`mt-4 bg-orange-500 rounded-full p-2 self-center`,
-        {backgroundColor: color, width: width},
+        tw`mt-4 bg-${color} rounded-full p-2 self-center`,
+        {width: width},
         style,
       ]}>
       <Text style={tw`text-16px font-bold self-center`}>{title}</Text>
@@ -32,12 +32,11 @@ const MyUiComponents = ({}) => {
 
 const Item = ({head, tail, icon}) => {
   return (
-    <View style={tw`flex-row items-center mt-4`}>
-      <Avatar style={tw`h-40px w-40px rounded-full bg-orange-300`} />
-
-      <View style={tw`pl-5`}>
-        <Text style={tw`text-5 font-bold`}>{head}</Text>
-        <Text style={tw`text-4 `}>{tail}</Text>
+    <View style={tw`flex-row items-center mt-2 p-2 bg--100`}>
+      <Avatar style={tw`h-20-px w-20-px rounded-full bg-blue-100 mr-4`} />
+      <Text style={tw`text-4 text-black`}>{head}</Text>
+      <View style={tw`pl-5 `}>
+        <Text style={tw`text-4 font-bold text-black`}>{tail}</Text>
       </View>
     </View>
   );

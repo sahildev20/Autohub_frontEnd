@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
-import {Avatar, Icon, SocialIcon} from '@rneui/themed';
-import {CustomHeading, Mybutton} from '../../components/small/MyUiComponents';
+import {Avatar, Icon} from '@rneui/themed';
+import {Mybutton} from '../../components/small/MyUiComponents';
+import {BUTTON_COLOR} from '../../assets';
 
 const BusDATA = [
-  {id: 'BX-1234', name: 'Rohan', icon: 'ei-arrow-right'},
-  {id: 'BX-1235', name: 'Imran', icon: 'person'},
-  {id: 'BX-1236', name: 'Yoosuf', icon: 'person'},
-  {id: 'BX-1237', name: 'Irfan', icon: 'person'},
+  {id: 'BX-1234', name: 'Rohan'},
+  {id: 'BX-1235', name: 'Imran'},
+  {id: 'BX-1236', name: 'Yoosuf'},
+  {id: 'BX-1237', name: 'Irfan'},
 ];
 const Screen = () => {
   const [authorized, setAuthorized] = React.useState(false);
@@ -55,11 +56,13 @@ const Screen = () => {
                 onPress={() => setAuthorized(!authorized)}
                 title="Login"
                 width="45%"
+                color={BUTTON_COLOR}
               />
               <Mybutton
                 onPress={() => alert('Call us at 8302332297')}
                 title="Contact Us"
                 width="45%"
+                color={BUTTON_COLOR}
               />
             </View>
           </View>
@@ -92,9 +95,7 @@ const Screen = () => {
             Today there is a seminar for 7th sem students
           </Text>
           <Text style={tw`text-4 mt-2 text-black font-black`}>Tomorrow</Text>
-          <Text style={tw`text-4 mt-2 `}>
-            Tomorrow will be holiday.
-          </Text>
+          <Text style={tw`text-4 mt-2 `}>Tomorrow will be holiday.</Text>
         </View>
         <Text style={tw`text-4 mb-2 font-bold text-black mt-6`}>
           Find a college bus
@@ -148,13 +149,13 @@ const Screen = () => {
           onPress={() => setAuthorized(!authorized)}
           title="LogOut"
           width="90%"
+          color={BUTTON_COLOR}
         />
       </ScrollView>
     );
   };
   return (
     <SafeAreaView style={tw`flex-1 bg-white p-8 pt-0`}>
-      <CustomHeading text="CollegeHub" style={{color: 'black', fontSize: 30}} />
       {authorized ? <Authorized /> : <Authentication />}
     </SafeAreaView>
   );

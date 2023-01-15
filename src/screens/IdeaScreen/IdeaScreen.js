@@ -3,6 +3,7 @@ import React from 'react';
 import tw from 'twrnc'
 import { TextInput } from 'react-native';
 import {CustomHeading, Mybutton} from '../../components/small/MyUiComponents';
+import {BUTTON_COLOR} from '../../assets';
 
 const IdeaScreen = () => {
   return (
@@ -24,6 +25,7 @@ const IdeaScreen = () => {
         title="Send"
         width="100%"
         onPress={() => alert('Idea has been sent to Sahil')}
+        color={BUTTON_COLOR}
       />
     </SafeAreaView>
   );

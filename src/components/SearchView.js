@@ -149,8 +149,10 @@ const SearchView = ({route}) => {
               style={tw`bg-gray-300 rounded-full pl-5 text-16px text-black`}
               placeholderTextColor="black"
               placeholder="Search a place"
-              value={place}
-              onChangeText={text => setPlace(text.toLowerCase())}
+              // value={place}
+              onChangeText={text =>
+                text.length % 3 == 0 ? setPlace(text.toLowerCase()) : null
+              }
             />
           }
           data={masterData}

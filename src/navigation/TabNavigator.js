@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import StackNavigator from './StackNavigator';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import NotificationScreen from '../screens/NotificationScreen/NotificationScreen';
 import HistoryScreen from '../screens/HistoryScreen/HistoryScreen';
 import IdeaScreen from '../screens/IdeaScreen/IdeaScreen';
@@ -14,6 +14,7 @@ import {
 } from 'react-native-paper/lib/typescript/styles/colors';
 import Screen from '../screens/mewat/Screen';
 import {color} from '@rneui/base';
+import {LOGO_SMALL} from '../assets';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,8 +23,15 @@ const TabNavigator = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({route}) => ({
-          headerShown: false,
-          headerTitleStyle: {fontSize: 25, fontWeight: 'bold', marginLeft: 10},
+          headerTitle: props => {
+            return (
+              <Image
+                style={{width: 120, marginTop: 4, resizeMode: 'contain'}}
+                source={LOGO_SMALL}
+              />
+            );
+          },
+          headerShown: true,
           tabBarActiveTintColor: '#FF7043',
           tabBarInactiveTintColor: 'gray',
           tabBarLabelStyle: {marginBottom: 4},
@@ -111,4 +119,4 @@ const TabNavigator = () => {
 
 export default TabNavigator;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

@@ -22,6 +22,7 @@ import {
   setPickupPlace,
 } from '../../slices/navSlice';
 import {Mybutton} from '../../components/small/MyUiComponents';
+import * as assets from '../../assets';
 
 // Main functional component return by this screen
 const HomeScreen = ({route, navigation}) => {
@@ -74,6 +75,7 @@ const HomeScreen = ({route, navigation}) => {
               <Mybutton
                 title="Next"
                 onPress={() => navigation.navigate('selectAuto')}
+                color={assets.BUTTON_COLOR}
               />
             </View>
           </View>

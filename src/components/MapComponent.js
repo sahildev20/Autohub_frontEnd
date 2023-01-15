@@ -18,12 +18,14 @@ const pickupCordinates1 = [76.9799513, 28.1231292];
 //Double map will show both pickup and drop location on map...
 const DoubleMapComponent = () => {
   const [routes, setRoutes] = React.useState();
-  const [routeDetails, setRouteDetails] = React.useState();
   const pickupCordinates = useSelector(selectPickupAddress);
   const dropCordinates = useSelector(selectDropAddress);
   const dispatch = useDispatch();
-  // const centerCordinates = [(Number(pickupCordinates[0]) + Number(dropCordinates[0])) / 2,
-  // (Number(pickupCordinates[1]) + Number(dropCordinates[1])) / 2];
+
+  const centerCordinates = [
+    (Number(pickupCordinates[0]) + Number(dropCordinates[0])) / 2,
+    (Number(pickupCordinates[1]) + Number(dropCordinates[1])) / 2,
+  ];
   const route = {
     type: 'FeatureCollection',
     features: [
@@ -55,9 +57,8 @@ const DoubleMapComponent = () => {
       const routeCoordinates = data.geometry.coordinates;
       const {distance, duration} = data;
       setRoutes(routeCoordinates);
-      setRouteDetails({distance, duration});
       dispatch(setRideInformation([distance, duration]));
-      console.log('route data : ', {distance, duration});
+      console.log('route data : ', {distance});
     } catch (error) {
       console.error(error);
     }
@@ -71,7 +72,6 @@ const DoubleMapComponent = () => {
         <MapboxGL.MapView
           style={{flex: 1}}
           styleURL={MBOX_URL}
-          padding={4}
           attributionEnabled={false}
           centerCoordinate={pickupCordinates}
           zoomEnabled={true}
@@ -80,33 +80,34 @@ const DoubleMapComponent = () => {
           <MapboxGL.ShapeSource id="route1" shape={route}>
             <MapboxGL.LineLayer
               id="route1layer"
-              style={{lineColor: 'orange', lineWidth: 8, lineCap: 'round'}}
+              style={{lineColor: '#FFFF3F', lineWidth: 4, lineCap: 'round'}}
             />
           </MapboxGL.ShapeSource>
 
           <MapboxGL.Camera
-            zoomLevel={12}
+            zoomLevel={9}
             animated={true}
             animationMode="flyTo"
             allowUpdates
-            centerCoordinate={pickupCordinates}
+            centerCoordinate={centerCordinates}
             animationDuration={1200}
           />
-
           <MapboxGL.PointAnnotation
             followUserLocation
             animated={true}
             id="p"
             key="pickup"
-            coordinate={pickupCordinates}
-            style={{
-              height: 30,
-              width: 30,
-              backgroundColor: '#00cccc',
-              borderColor: '#fff',
-              borderRadius: 50,
-              borderWidth: 3,
-            }}></MapboxGL.PointAnnotation>
+            coordinate={pickupCordinates}>
+            <View
+              style={{
+                height: 30,
+                width: 30,
+                backgroundColor: '#FFFF3F',
+                borderColor: '#EDF2FB',
+                borderRadius: 50,
+                borderWidth: 6,
+              }}></View>
+          </MapboxGL.PointAnnotation>
           <MapboxGL.PointAnnotation
             id="d"
             key="drop"

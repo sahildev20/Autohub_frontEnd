@@ -3,6 +3,7 @@ import React from 'react';
 import tw from 'twrnc';
 import {CustomHeading} from '../../components/small/MyUiComponents';
 import AnimatedLottieView from 'lottie-react-native';
+import * as assests from '../../assets/index';
 
 const ProfileScreen = () => {
   return (
@@ -11,7 +12,7 @@ const ProfileScreen = () => {
       <View style={tw`flex-1 items-center justify-center`}>
         <AnimatedLottieView
           style={{width: 150}}
-          source={require('../../assets/130334-sweet-run-cycle.json')}
+          source={assests.PANDA}
           autoPlay
           loop
           // duration={100}

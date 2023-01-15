@@ -19,19 +19,13 @@ import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
 import tw from 'twrnc';
 import {Mybutton} from './small/MyUiComponents';
+import * as assets from '../assets';
 
 const UserLocation = ({route}) => {
   //Getting values from slice using selector
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  //To run on app lauch we use useeffect hook
-  React.useEffect(() => {
-    // requestLocationPermission();
-    return () => {
-      Geolocation.clearWatch(watchID);
-    };
-  }, []);
   const requestLocationPermission = async () => {
     //In ios it is being done automatically
 
@@ -86,23 +80,21 @@ const UserLocation = ({route}) => {
     );
   };
 
-  const imageUri =
-    'https://firebasestorage.googleapis.com/v0/b/autometa-2611.appspot.com/o/rickshaw.png?alt=media&token=c2e4e093-1d67-43a9-9a97-e02767c843f6';
   return (
-    <View style={tw`bg-white flex-1 items-center p-10 pt-30`}>
-      <View>
+    <View style={tw`bg-white flex-1 items-center p-10 pt-20`}>
+      <View style={tw`items-center`}>
         <Image
           style={styles.sticker}
           source={{
-            uri: imageUri,
+            uri: assets.AUTO_IMAGE,
           }}
         />
-        <Text style={tw`text-center font-bold text-7 pt-10 text-black`}>
-          First thing first !
+        <Text style={tw`font-bold text-4 pt-10 text-black`}>
+          Your Location is required to get you a ride
         </Text>
-        <Text style={tw`text-center font-bold text-4 pt-3 text-black`}>
+        {/* <Text style={tw`text-center font-bold text-4 pt-3 text-black`}>
           Where you are ?
-        </Text>
+        </Text> */}
       </View>
       <View style={tw`flex-1 justify-end`}>
         <TouchableOpacity
@@ -114,6 +106,7 @@ const UserLocation = ({route}) => {
           title="Enable Location"
           width={300}
           onPress={() => requestLocationPermission()}
+          color={assets.BUTTON_COLOR}
         />
       </View>
     </View>
@@ -122,5 +115,5 @@ const UserLocation = ({route}) => {
 export default UserLocation;
 
 const styles = StyleSheet.create({
-  sticker: {width: 200, height: 200, resizeMode: 'contain'},
+  sticker: {width: 200, height: 200, resizeMode: 'cover'},
 });
