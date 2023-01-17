@@ -25,8 +25,8 @@ const ProfileScreen = () => {
 
   const [user, setUser] = React.useState(null);
   const [editable, setEditable] = React.useState(false);
-  const [name, setName] = React.useState('sahil');
-  const [address, setAddress] = React.useState('nuh haryana');
+  // const [name, setName] = React.useState('sahil');
+  // const [address, setAddress] = React.useState('nuh haryana');
 
   async function getUserInfo() {
     const userId = await AsyncStorage.getItem('userId');

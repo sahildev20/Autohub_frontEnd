@@ -4,7 +4,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import tw from 'twrnc';
 const Loading = () => {
   return (
-    <View style={tw`flex-1 justify-center items-center`}>
+    <View style={tw`bg-white flex-1 justify-center items-center`}>
       <AnimatedLottieView
         style={{width: 150}}
         source={require('../assets/99833-edupia-loading.json')}

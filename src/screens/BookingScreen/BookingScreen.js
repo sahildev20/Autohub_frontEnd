@@ -1,14 +1,4 @@
-/* eslint-disable prettier/prettier */
-
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Button,
-} from 'react-native';
+import {StyleSheet, Text, SafeAreaView, View} from 'react-native';
 import React from 'react';
 import axios from 'axios';
 import tw from 'twrnc';
@@ -22,9 +12,9 @@ import {
 import Loading from '../../components/Loading';
 import AnimatedLottieView from 'lottie-react-native';
 import * as assets from '../../assets/index';
+import {MY_BACKEND_URL} from '@env';
 
 const BookingScreen = ({route}) => {
-  const {autoid} = route.params;
   const [loading, setLoading] = React.useState(true);
   const [nearestAuto, setNearestAuto] = React.useState(null);
 
@@ -39,7 +29,7 @@ const BookingScreen = ({route}) => {
 
     axios
       .post(
-        'http://192.168.58.77:3000/findAuto',
+        `${MY_BACKEND_URL}/driver/getNearest`,
         {
           location: 'default',
           latitude: pickupCoordinates[1],
@@ -66,7 +56,7 @@ const BookingScreen = ({route}) => {
   return loading ? (
     <Loading />
   ) : (
-    <SafeAreaView style={tw`flex-1 p-8  `}>
+    <SafeAreaView style={tw`flex-1 bg-white p-8  `}>
       <View style={tw` items-center mb-4`}>
         <AnimatedLottieView
           style={{width: 250}}

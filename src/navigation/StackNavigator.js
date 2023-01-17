@@ -21,6 +21,14 @@ const StackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        headerTitle: props => {
+          return (
+            <Image
+              style={{width: 120, marginTop: 4, resizeMode: 'contain'}}
+              source={LOGO_SMALL}
+            />
+          );
+        },
         headerStyle: {
           backgroundColor: '#fff',
         },
@@ -30,19 +38,15 @@ const StackNavigator = () => {
         component={HomeScreen}
         options={{
           headerShown: true,
-          headerTitle: props => {
-            return (
-              <Image
-                style={{width: 120, marginTop: 4, resizeMode: 'contain'}}
-                source={LOGO_SMALL}
-              />
-            );
-          },
         }}
       />
 
       <Stack.Screen name="Search" component={SearchView} />
-      <Stack.Screen name="Booking" component={BookingScreen} />
+      <Stack.Screen
+        name="Booking"
+        component={BookingScreen}
+        options={{headerShown: true}}
+      />
       <Stack.Screen name="Drivers" component={DriversScreen} />
       <Stack.Screen name="Register" component={LoginScreen} />
       <Stack.Screen name="selectAuto" component={AvailableAutos} />

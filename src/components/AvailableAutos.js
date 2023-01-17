@@ -9,57 +9,57 @@ import {
 import {React, useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {DoubleMapComponent} from './MapComponent';
-import {Avatar} from '@rneui/themed';
 import tw from 'twrnc';
 import {useNavigation} from '@react-navigation/native';
 import Loading from '../components/Loading';
-import {AUTO_IMAGE} from '../assets';
-
-const DATA = [
-  {
-    id: 1,
-    name: 'Shared',
-    label: 'Driver can pickup upto 5 passengers',
-    amount: 30,
-  },
-
-  {
-    id: 2,
-    name: 'Personal',
-    label: 'Book a personal ride',
-    amount: 100,
-  },
-];
+import axios from 'axios';
+import {MY_BACKEND_URL} from '@env';
 
 const AvailableAutos = () => {
   //using use state to hold the selected auto id which will be send to server later
+  const [data, setData] = useState(null);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
-  //Driver or Auto component which describes the details of an available auto
-  const Driver = ({item, selected, setSelected}) => {
+  //to give some time to map component for loading
+  setTimeout(() => {
+    setLoading(false);
+  }, 1000);
+
+  useEffect(() => {
+    axios
+      .get(`${MY_BACKEND_URL}/vehicles`)
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(err => {
+        console.log('error dadada:', err);
+      });
+  }, []);
+  //a component which describes the details of an available auto
+  const AvailableOption = ({item, selected, setSelected}) => {
     return (
       <TouchableOpacity
         activeOpacity={false}
-        onPress={() => setSelected(item.id)}
+        onPress={() => setSelected(item.title)}
         style={[
           styles.auto,
-          {backgroundColor: selected == item.id ? '#fbb74d' : '#DDE2E6'},
+          {backgroundColor: selected == item.title ? '#fbb74d' : '#DDE2E6'},
         ]}>
         <View style={[tw`w-60px ml-4 h-60px items-center justify-center`]}>
           <Image
             style={{width: 40, height: 40, resizeMode: 'contain'}}
             source={{
-              uri: AUTO_IMAGE,
+              uri: item.imageURL,
             }}
           />
         </View>
         <View style={tw`ml-4`}>
           <Text style={tw`text-20px font-400  text-black font-bold`}>
-            {item.name}
+            {item.title}
           </Text>
-          <Text style={tw`text-12px text-black`}>{item.label}</Text>
+          <Text style={tw`text-12px text-black`}>{item.tagline}</Text>
         </View>
         {/* <View style={tw`flex items-end justify-end`}>
           <Text>{item.amount}</Text>
@@ -67,10 +67,7 @@ const AvailableAutos = () => {
       </TouchableOpacity>
     );
   };
-  //to give some time to map component for loading
-  setTimeout(() => {
-    setLoading(false);
-  }, 1000);
+
   ///Main return of Available Auto Screen
 
   return (
@@ -85,11 +82,11 @@ const AvailableAutos = () => {
             Auto available at the moment
           </Text>
           <FlatList
-            data={DATA}
-            keyExtractor={item => item.id}
+            data={data}
+            keyExtractor={item => item.title}
             // ItemSeparatorComponent={() => <View style={tw`h-1px  bg-gray-600`}></View>}
             renderItem={({item}) => (
-              <Driver
+              <AvailableOption
                 item={item}
                 selected={selected}
                 setSelected={setSelected}
@@ -101,7 +98,7 @@ const AvailableAutos = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('Booking', {autoid: selected})}
+          onPress={() => navigation.navigate('Drivers', {autoid: selected})}
           //Button to proceed to next screen and completer booking
           disabled={selected ? false : true}
           style={[
