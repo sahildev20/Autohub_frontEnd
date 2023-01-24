@@ -1,6 +1,6 @@
-import { View, Text, SafeAreaView } from 'react-native'
-import React from 'react'
-import tw from 'twrnc'
+import {Text, SafeAreaView} from 'react-native';
+import React from 'react';
+import tw from 'twrnc';
 import AnimatedLottieView from 'lottie-react-native';
 
 const TrackRideScreen = () => {
@@ -18,4 +18,4 @@ const TrackRideScreen = () => {
   );
 };
 
-export default TrackRideScreen
+export default TrackRideScreen;

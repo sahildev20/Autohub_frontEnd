@@ -7,35 +7,46 @@ import {
   Image,
 } from 'react-native';
 import {React, useState, useEffect} from 'react';
+
 import {SafeAreaView} from 'react-native-safe-area-context';
+
 import {DoubleMapComponent} from './MapComponent';
+
 import tw from 'twrnc';
+
 import {useNavigation} from '@react-navigation/native';
+
 import Loading from '../components/Loading';
+
 import axios from 'axios';
+
 import {MY_BACKEND_URL} from '@env';
 
 const AvailableAutos = () => {
   //using use state to hold the selected auto id which will be send to server later
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
   //to give some time to map component for loading
-  setTimeout(() => {
-    setLoading(false);
-  }, 1000);
 
-  useEffect(() => {
+  async function fetchData() {
     axios
       .get(`${MY_BACKEND_URL}/vehicles`)
       .then(response => {
         setData(response.data);
+        console.log({response});
+        setInterval(() => {
+          setLoading(false);
+        }, 1000);
       })
       .catch(err => {
-        console.log('error dadada:', err);
+        console.log({err});
       });
+  }
+  useEffect(() => {
+    fetchData();
   }, []);
   //a component which describes the details of an available auto
   const AvailableOption = ({item, selected, setSelected}) => {

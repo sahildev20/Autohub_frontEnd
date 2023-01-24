@@ -14,7 +14,7 @@ import tw from 'twrnc';
 import axios from 'axios';
 import {MY_BACKEND_URL} from '@env';
 import {useSelector} from 'react-redux';
-import {selectDropAddress, selectPickupAddress} from '../../slices/navSlice';
+import {selectPickupAddress, selectDropAddress} from '../../slices/navSlice';
 import {AUTO_IMAGE} from '../../assets';
 
 function Driver({item}) {
@@ -37,6 +37,7 @@ const DriversScreen = ({route}) => {
   const [data, setData] = useState(null);
   const {autoid} = route.params;
   const pickupCoordinates = useSelector(selectPickupAddress);
+  const dropCoordinates = useSelector(selectDropAddress);
 
   async function getAvailableDrivers() {
     axios
@@ -55,17 +56,46 @@ const DriversScreen = ({route}) => {
         },
       )
       .then(res => {
-        console.log('data:', res.data);
-        setData(res.data);
+        const availableDrivers = res.data;
+        setData(availableDrivers);
       })
       .catch(err => {
         console.log('error:', err);
       });
   }
+
+  async function getAvailableRides() {
+    axios
+      .post(
+        `${MY_BACKEND_URL}/getAvailableRides`,
+        {
+          location: 'alafia',
+          userId: 'abcdefg',
+          pickupCoordinates,
+          dropCoordinates,
+          sendMeThis: '_id vehicleNumber name',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(res => {
+        console.log({data: res.data});
+        // setData(availableDrivers);
+      })
+      .catch(err => {
+        console.log('error:', err);
+      });
+  }
+
   //fetch nearest driver from server
   useEffect(() => {
     if (autoid == 'Personal') {
       getAvailableDrivers();
+    } else {
+      getAvailableRides();
     }
   }, []);
 

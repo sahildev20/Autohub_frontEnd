@@ -12,13 +12,14 @@ import {
 import * as React from 'react';
 import tw from 'twrnc';
 import {useNavigation} from '@react-navigation/native';
-import {MAPBOX_API} from '@env';
+import {MAPBOX_API, LOCATIONIQ_KEY} from '@env';
 import {useDispatch} from 'react-redux';
 import {
   setDropAddress,
   setDropPlace,
   setPickupAddress,
   setPickupPlace,
+  setEmptyLocation,
 } from '../slices/navSlice';
 
 const DATA = [
@@ -63,10 +64,9 @@ const SearchView = ({route}) => {
   const getMasterData = async () => {
     try {
       const response = await fetch(
-        `https://api.locationiq.com/v1/autocomplete?key=pk.0f57b08b8e518c12de8e3ca9aa955f74&q=${place}&limit=5&countrycodes=in&dedupe=1`,
+        `https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_KEY}&q=${place}&limit=5&countrycodes=in&dedupe=1`,
       );
       const json = await response.json();
-      console.log('json data:', json);
       if (json.error) {
       } else {
         let tempData = [];
@@ -94,19 +94,22 @@ const SearchView = ({route}) => {
   };
   ///function to use mapbox api to set coordinates
   const updatePickupAddress = async display_name => {
-    const search_term = display_name.substring(0, display_name.indexOf(','));
+    const search_term = display_name.toLowerCase();
+    console.log(search_term);
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${search_term}.json?country=in&proximity=ip&autocomplete=false&access_token=${MAPBOX_API}`,
+        `https://us1.locationiq.com/v1/search?key=${LOCATIONIQ_KEY}&q=${search_term}&format=json`,
       );
-      const json = await response.json();
-      // setPickupAddress(json);
-      let coords = await json.features[0].geometry.coordinates;
+
+      let json = await response.json();
+      let coords = [json[0].lon, json[0].lat];
       console.log('pcoords:', coords);
       if (isPickup) {
         dispatch(setPickupAddress(coords));
+        dispatch(setEmptyLocation(false));
       } else {
         dispatch(setDropAddress(coords));
+        dispatch(setEmptyLocation(false));
       }
     } catch (error) {
       console.error(error);
@@ -115,6 +118,8 @@ const SearchView = ({route}) => {
   //it is function called when submit the search value
   const handleSubmit = item => {
     const {display_name} = item;
+    console.log({display_name});
+
     if (isPickup) {
       dispatch(setPickupPlace(display_name));
     } else {

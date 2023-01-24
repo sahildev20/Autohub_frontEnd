@@ -83,9 +83,8 @@ const ProfileScreen = () => {
         />
         <Text>Your profile is awesome but invisible right now !</Text>
       </View>
-
       <UserDetails user={user} />
-      <View>
+      <View style={tw`flex-1 `}>
         <Button
           title="Edit Profile"
           color="black"
@@ -93,6 +92,11 @@ const ProfileScreen = () => {
         />
 
         <Button onPress={() => handleLogOut()} title="Log Out" color="orange" />
+        <Button
+          onPress={() => navigation.navigate('trackRide')}
+          title="Track"
+          color="orange"
+        />
       </View>
     </SafeAreaView>
   );

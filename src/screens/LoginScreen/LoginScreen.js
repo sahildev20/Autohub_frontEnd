@@ -1,7 +1,7 @@
 import {Text, View, SafeAreaView, TextInput, Button} from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
-import {MY_IP} from '@env';
+import {MY_BACKEND_URL} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {saveJWTUser} from '../../components/constants/constants';
@@ -35,7 +35,7 @@ const LoginScreen = () => {
       }
 
       try {
-        const res = await axios.post(`http://${MY_IP}:3000/user/signup`, {
+        const res = await axios.post(`${MY_BACKEND_URL}/user/signup`, {
           mobile: phone,
           password: password,
         });
@@ -43,6 +43,7 @@ const LoginScreen = () => {
         dispatch(setUser(true));
         return;
       } catch (err) {
+        console.log({err});
         if (err.response == undefined) {
           setError('Something went wrong');
           return;
@@ -106,7 +107,7 @@ const LoginScreen = () => {
         return;
       }
       try {
-        const res = await axios.post(`http://${MY_IP}:3000/user/login`, {
+        const res = await axios.post(`${MY_BACKEND_URL}/user/login`, {
           mobile: phone,
           password: password,
         });
@@ -114,6 +115,7 @@ const LoginScreen = () => {
         dispatch(setUser(true));
         return;
       } catch (error) {
+        console.log({error});
         if (error.response == undefined) {
           return setError('something went wrong please try again later');
         } else {

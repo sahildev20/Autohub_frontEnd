@@ -94,9 +94,11 @@ const UserLocation = ({route}) => {
       </View>
       <View style={tw`flex-1 justify-end`}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Search', {target: 'pickup'})}
-          style={tw`items-center p-3 mb-5`}>
-          <Text style={tw`text-red-500`}>Enter Manually</Text>
+          onPress={() => navigation.navigate('Search', {isPickup: true})}
+          style={tw`items-center p-3 mb-3`}>
+          <Text style={tw`text-red-400 text-4 tracking-widest`}>
+            Enter Manually
+          </Text>
         </TouchableOpacity>
         <Mybutton
           title="Enable Location"

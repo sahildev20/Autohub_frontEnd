@@ -3,10 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   user: false,
-  pickupAddress: [76.9799513, 28.1231292],
-  pickupPlace: 'hello',
-  dropAddress: [76.9799513, 28.1231292],
-  dropPlace: 'hii',
+  pickupAddress: [],
+  pickupPlace: 'Enter pickup location',
+  dropAddress: [],
+  dropPlace: 'Enter drop location',
   rideInformation: [],
   emptyLocation: true,
 };

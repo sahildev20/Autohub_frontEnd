@@ -15,10 +15,12 @@ import tw from 'twrnc';
 import MapComponent from '../../components/MapComponent';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  selectDropAddress,
   selectDropPlace,
   selectEmptyLocation,
   selectPickupAddress,
   selectPickupPlace,
+  setDropPlace,
   setPickupPlace,
 } from '../../slices/navSlice';
 import {Mybutton} from '../../components/small/MyUiComponents';
@@ -29,27 +31,39 @@ const HomeScreen = ({route, navigation}) => {
   //Getting values from slice using selector
   const emptyLocation = useSelector(selectEmptyLocation);
   const pickupAddress = useSelector(selectPickupAddress);
+  const dropAddress = useSelector(selectDropAddress);
   const pickupPlace = useSelector(selectPickupPlace);
   const dropPlace = useSelector(selectDropPlace);
   const dispatch = useDispatch();
 
-  const getPlaceName = async p => {
+  const getPlaceName = async (target, arr) => {
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${p[0]}, ${p[1]}.json?access_token=${MAPBOX_API}`,
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${arr[0]}, ${arr[1]}.json?access_token=${MAPBOX_API}`,
       );
       const json = await response.json();
       // setPickupAddress(json);
       let title = json.features[0].place_name;
-      dispatch(setPickupPlace(title));
+      console.log();
+      if (target == 'drop') {
+        dispatch(setDropPlace(title));
+      } else {
+        dispatch(setPickupPlace(title));
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   React.useEffect(() => {
-    getPlaceName(pickupAddress);
+    getPlaceName('pickup', pickupAddress);
   }, [pickupAddress]);
+
+  React.useEffect(() => {
+    if (dropAddress.length !== 0) {
+      getPlaceName('drop', dropAddress);
+    }
+  }, [dropAddress]);
 
   return (
     <SafeAreaView style={styles.homecontainer}>

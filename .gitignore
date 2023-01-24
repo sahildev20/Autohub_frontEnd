@@ -33,6 +33,16 @@ local.properties
 *.hprof
 .cxx/
 
+# Custom
+#
+# .vscode
+# .eslintrc.js
+# .flowconfig
+# .prettierrc.js
+# .watchmanconfig
+# Gemfile
+# metro.config.js
+
 # node.js
 #
 /backend
