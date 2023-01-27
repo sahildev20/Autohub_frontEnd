@@ -12,37 +12,55 @@ import tw from 'twrnc';
 import {CustomHeading} from '../../components/small/MyUiComponents';
 import AnimatedLottieView from 'lottie-react-native';
 import * as assests from '../../assets/index';
-import {logOutUser} from '../../components/constants/constants';
+import {getSignalUser, logOutUser} from '../../components/constants/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import axios from 'axios';
 import {MY_BACKEND_URL} from '@env';
+import {setUser} from '../../slices/navSlice';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [user, setUser] = React.useState(null);
+  const [userInfo, setUserInfo] = React.useState(null);
   const [editable, setEditable] = React.useState(false);
-  // const [name, setName] = React.useState('sahil');
-  // const [address, setAddress] = React.useState('nuh haryana');
 
   async function getUserInfo() {
     const userId = await AsyncStorage.getItem('userId');
     try {
       const res = await axios.get(`${MY_BACKEND_URL}/user/${userId}`);
-      setUser({mobile: res.data.mobile});
       console.log(res.data);
+
+      setUserInfo({mobile: res.data.mobile});
     } catch (error) {
       console.log(error);
     }
-    console.log('userId', userId);
   }
   React.useEffect(() => {
     getUserInfo();
   }, []);
+  //handle push notification
+  async function handlePush() {
+    const playerId = await getSignalUser();
+    const notificationObj = {
+      contents: {en: 'Message Body'},
+      include_player_ids: [playerId],
+    };
+    const jsonData = JSON.stringify(notificationObj);
+    loggingFunction(`Attempting to send notification to ${playerId}`);
 
+    OneSignal.postNotification(
+      jsonData,
+      success => {
+        loggingFunction(`Success: ${JSON.stringify(success)}`);
+      },
+      failure => {
+        loggingFunction(`Failure: ${JSON.stringify(failure)}`);
+      },
+    );
+  }
   //user logout
   async function handleLogOut() {
     dispatch(setUser(false));
@@ -83,7 +101,7 @@ const ProfileScreen = () => {
         />
         <Text>Your profile is awesome but invisible right now !</Text>
       </View>
-      <UserDetails user={user} />
+      <UserDetails user={userInfo} />
       <View style={tw`flex-1 `}>
         <Button
           title="Edit Profile"
@@ -97,6 +115,7 @@ const ProfileScreen = () => {
           title="Track"
           color="orange"
         />
+        <Button onPress={() => handlePush()} title="Log Out" color="orange" />
       </View>
     </SafeAreaView>
   );

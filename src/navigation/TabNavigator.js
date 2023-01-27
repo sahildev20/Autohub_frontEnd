@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUser, setUser} from '../slices/navSlice';
 import {retrieveJWTUser} from '../components/constants/constants';
+import SplashScreen from '../screens/SplashScreen/SplashScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,24 +37,15 @@ const TabNavigator = () => {
       if (!cred) {
         setIsLoggedIn(false);
       } else {
-        setIsLoggedIn(true);
+        setTimeout(() => {
+          setIsLoggedIn(true);
+        }, 3000);
       }
     }
   };
   React.useEffect(() => {
     getLogin(user);
   }, [user]);
-
-  // const checkIfLoggedIn = async () => {
-  //   const value = await AsyncStorage.getItem('isLoggedIn');
-  //   if (value === 'true') {
-  //     setIsLoggedIn(true);
-  //     dispatch(setUser(true));
-  //   } else {
-  //     setIsLoggedIn(false);
-  //     dispatch(setUser(false));
-  //   }
-  // };
 
   if (isLoggedIn == true) {
     return (
@@ -155,8 +147,12 @@ const TabNavigator = () => {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="loginnn" component={LoginScreen} />
+        <Stack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName="splash">
+          <Stack.Screen name="splash" component={SplashScreen} />
+
+          <Stack.Screen name="login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

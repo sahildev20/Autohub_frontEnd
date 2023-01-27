@@ -21,35 +21,40 @@ import Loading from '../components/Loading';
 import axios from 'axios';
 
 import {MY_BACKEND_URL} from '@env';
+import {useSelector} from 'react-redux';
+import {selectRideInformation} from '../slices/navSlice';
 
 const AvailableAutos = () => {
   //using use state to hold the selected auto id which will be send to server later
   const [data, setData] = useState({});
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // navigation
   const navigation = useNavigation();
 
-  //to give some time to map component for loading
+  const rideInfo = useSelector(selectRideInformation);
+  //fetch vehicle data from server
 
   async function fetchData() {
     axios
       .get(`${MY_BACKEND_URL}/vehicles`)
       .then(response => {
         setData(response.data);
-        console.log({response});
         setInterval(() => {
           setLoading(false);
         }, 1000);
       })
       .catch(err => {
-        console.log({err});
+        console.log({err: err.message});
       });
   }
   useEffect(() => {
     fetchData();
   }, []);
+
   //a component which describes the details of an available auto
-  const AvailableOption = ({item, selected, setSelected}) => {
+  const RideTypeItem = ({item, selected, setSelected}) => {
     return (
       <TouchableOpacity
         activeOpacity={false}
@@ -67,14 +72,16 @@ const AvailableAutos = () => {
           />
         </View>
         <View style={tw`ml-4`}>
-          <Text style={tw`text-20px font-400  text-black font-bold`}>
+          <Text style={tw`text-20px font-400  text-black tracking-widest`}>
             {item.title}
           </Text>
           <Text style={tw`text-12px text-black`}>{item.tagline}</Text>
         </View>
-        {/* <View style={tw`flex items-end justify-end`}>
-          <Text>{item.amount}</Text>
-        </View> */}
+        <View style={tw`flex-1 items-end justify-end p-2`}>
+          <Text style={tw`font-bold text-black`}>
+            ₹ {Math.round(rideInfo[0] * item.ratePerKM)}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -87,24 +94,28 @@ const AvailableAutos = () => {
         <Loading />
       </View>
       <View style={{flex: 1, display: loading ? 'none' : 'flex'}}>
-        <DoubleMapComponent style={tw``} />
-        <View style={tw`h-50% `}>
-          <Text style={[tw`text-18px  p-3 pl-5 text-black font-bold`, {}]}>
-            Auto available at the moment
+        <DoubleMapComponent style={tw`flex-1`} />
+        <View style={tw``}>
+          <Text
+            style={[
+              tw`text-4  p-2 pl-4 text-black font-bold tracking-widest`,
+              {},
+            ]}>
+            SELECT TYPE OF RIDE
           </Text>
           <FlatList
             data={data}
             keyExtractor={item => item.title}
             // ItemSeparatorComponent={() => <View style={tw`h-1px  bg-gray-600`}></View>}
             renderItem={({item}) => (
-              <AvailableOption
+              <RideTypeItem
                 item={item}
                 selected={selected}
                 setSelected={setSelected}
               />
             )}
             // footer to give some space below
-            ListFooterComponent={() => <View style={tw`h-18`} />}
+            ListFooterComponent={() => <View style={tw`h-15`} />}
           />
         </View>
 
@@ -113,7 +124,7 @@ const AvailableAutos = () => {
           //Button to proceed to next screen and completer booking
           disabled={selected ? false : true}
           style={[
-            tw` m-4 mb-10 p-2 w-40 rounded-full `,
+            tw` m-4 p-2 w-40 rounded-full `,
             styles.nextButton,
             {backgroundColor: selected ? '#fbb74d' : 'gray'},
           ]}>
@@ -148,6 +159,7 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 4,
     margin: 8,
+    marginBottom: 12,
     alignItems: 'center',
     alignSelf: 'center',
     elevation: 5,

@@ -111,6 +111,7 @@ const LoginScreen = () => {
           mobile: phone,
           password: password,
         });
+        console.log(res);
         await saveJWTUser(res.data.token, res.data._id, res.data.mobile);
         dispatch(setUser(true));
         return;

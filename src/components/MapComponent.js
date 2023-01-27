@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   selectDropAddress,
   selectPickupAddress,
+  selectRideInformation,
   setDropAddress,
   setPickupAddress,
   setRideInformation,
@@ -22,8 +23,11 @@ const pickupCordinates1 = [76.9799513, 28.1231292];
 //Double map will show both pickup and drop location on map...
 const DoubleMapComponent = () => {
   const [routes, setRoutes] = React.useState();
+  const [regionFeature, setRegionFeature] = React.useState(undefined);
+  const [bounds, setBounds] = React.useState(undefined);
   const pickupCordinates = useSelector(selectPickupAddress);
   const dropCordinates = useSelector(selectDropAddress);
+  const rideInfo = useSelector(selectRideInformation);
   const dispatch = useDispatch();
 
   const centerCordinates = [
@@ -40,11 +44,6 @@ const DoubleMapComponent = () => {
           type: 'LineString',
           coordinates: routes,
         },
-        style: {},
-        paint: {
-          'fill-color': '#088',
-          'fill-opacity': 0.8,
-        },
       },
     ],
   };
@@ -60,10 +59,8 @@ const DoubleMapComponent = () => {
       const data = json.routes[0];
       const routeCoordinates = data.geometry.coordinates;
       const {distance, duration} = data;
-      const formattedDistance = `${(distance / 1000).toFixed(2)} kilometers`;
-      const formattedDuration = `${(duration / 60).toFixed(0)} minutes`;
       setRoutes(routeCoordinates);
-      dispatch(setRideInformation([formattedDistance, formattedDuration]));
+      dispatch(setRideInformation([distance / 1000, duration / 60]));
     } catch (error) {
       console.error(error);
     }
@@ -71,24 +68,73 @@ const DoubleMapComponent = () => {
   if (routes == undefined) {
     return null;
   }
+
+  // function renderRegionChange() {
+  //   if (!regionFeature) {
+  //     return (
+  //       <View>
+  //         <Text>Move the map!</Text>
+  //       </View>
+  //     );
+  //   }
+
+  //   const {geometry, properties} = regionFeature;
+
+  //   const neCoord = properties.visibleBounds[0]
+  //     .map(n => n.toPrecision(6))
+  //     .join(', ');
+  //   const swCoord = properties.visibleBounds[1]
+  //     .map(n => n.toPrecision(6))
+  //     .join(', ');
+
+  //   return (
+  //     <View>
+  //       <Text>Visible Bounds NE: {neCoord}</Text>
+  //       <Text>Visible Bounds SW: {swCoord}</Text>
+  //       {/* <Text>changing</Text>
+  //       <Text>Latitude: {geometry.coordinates[1]}</Text>
+  //       <Text>Longitude: {geometry.coordinates[0]}</Text>
+
+  //       <Text>Zoom Level: {properties.zoomLevel}</Text>
+  //       <Text>Heading: {properties.heading}</Text>
+  //       <Text>Pitch: {properties.pitch}</Text>
+  //       <Text>
+  //         Is User Interaction: {properties.isUserInteraction ? 'true' : 'false'}
+  //       </Text>
+  //       <Text>Animated: {properties.animated ? 'true' : 'false'}</Text> */}
+  //     </View>
+  //   );
+  // }
+  function onRegionDidChange(regionFeat) {
+    setRegionFeature(regionFeat);
+    console.log({zoom: regionFeat.properties.zoomLevel});
+    console.log({bounds: regionFeat.properties.visibleBounds});
+  }
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <View style={{width: '100%', height: '100%'}}>
         <MapboxGL.MapView
+          // bounds={[pickupCordinates, dropCordinates]}
           style={{flex: 1}}
-          styleURL={MBOX_URL}
           attributionEnabled={false}
-          centerCoordinate={pickupCordinates}
+          centerCoordinate={
+            centerCordinates !== undefined ? centerCordinates : pickupCordinates
+          }
           zoomEnabled={true}
           animated={true}
+          onRegionDidChange={regionFeat => onRegionDidChange(regionFeat)}
           followUserLocation>
           <MapboxGL.Camera
-            zoomLevel={10}
-            animated={true}
-            animationMode="moveTo"
+            minZoomLevel={8}
             allowUpdates
-            centerCoordinate={centerCordinates}
-            animationDuration={1500}
+            animated={true}
+            centerCoordinate={
+              centerCordinates !== undefined
+                ? centerCordinates
+                : pickupCordinates
+            }
+            animationMode="flyTo"
+            animationDuration={2000}
           />
           <MapboxGL.PointAnnotation
             followUserLocation
@@ -105,6 +151,14 @@ const DoubleMapComponent = () => {
                 borderRadius: 50,
                 borderWidth: 8,
               }}></View>
+            <MapboxGL.Callout
+              id="pick"
+              key="pickup"
+              title={`Distance: ${rideInfo[0]} Kms`}
+              focusable={true}
+              collapsable={false}
+              hasTVPreferredFocus
+            />
           </MapboxGL.PointAnnotation>
           <MapboxGL.PointAnnotation
             id="d"
@@ -113,10 +167,26 @@ const DoubleMapComponent = () => {
           <MapboxGL.ShapeSource id="route1" shape={route}>
             <MapboxGL.LineLayer
               id="route1layer"
-              style={{lineColor: '#FFFF3F', lineWidth: 4, lineCap: 'round'}}
+              style={{
+                lineColor: '#FFFF3F',
+                lineWidth: 6,
+                lineCap: 'round',
+                lineGradient: [
+                  'interpolate',
+                  ['linear'],
+                  ['line-progress'],
+                  0,
+                  'yellow',
+                  0.5,
+                  'orange',
+                  0.7,
+                  'orange',
+                ],
+              }}
             />
           </MapboxGL.ShapeSource>
         </MapboxGL.MapView>
+        {/* {renderRegionChange()} */}
       </View>
     </View>
   );
@@ -124,8 +194,11 @@ const DoubleMapComponent = () => {
 const MapComponent = () => {
   const pickupCordinates = useSelector(selectPickupAddress);
   const dropCordinates = useSelector(selectDropAddress);
+
   const pointAnnotation = React.useRef({refresh: () => null});
+
   const pointAnnotationDrop = React.useRef({refresh: () => null});
+
   const dispatch = useDispatch();
   async function handleDrag(feature) {
     console.log('dragend', feature.geometry.coordinates);
@@ -147,7 +220,6 @@ const MapComponent = () => {
         {pickupCordinates.length !== 0 && (
           <MapboxGL.MapView
             style={{flex: 1}}
-            styleURL={MBOX_URL}
             ref={c => (this._map = c)}
             onPress={e => onPress(e)}
             attributionEnabled={false}
@@ -198,15 +270,7 @@ const MapComponent = () => {
                 coordinate={dropCordinates}
                 title="DROP"
                 draggable
-                onDragEnd={feature => handleDrag(feature)}
-                ref={pointAnnotationDrop}>
-                <View>
-                  <Image
-                    source={{uri: LOC_DROP}}
-                    style={{width: 40, height: 40}}
-                    onLoad={() => pointAnnotationDrop.current?.refresh()}
-                  />
-                </View>
+                onDragEnd={feature => handleDrag(feature)}>
                 <MapboxGL.Callout
                   id="dropcall"
                   key="dropcall"

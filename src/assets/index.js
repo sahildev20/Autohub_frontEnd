@@ -2,6 +2,7 @@ export const BLUE_LOADING = require('./99833-edupia-loading.json');
 export const PANDA = require('./130334-sweet-run-cycle.json');
 export const SUCCESS_BLUE = require('./successblue.json');
 export const SUCCESS_ORANGE = require('./successorange.json');
+export const CAR = require('./movingCAr.json');
 export const LOGO_SMALL = require('./logo-s.png');
 export const LOGO_MEDIUM = require('./logo-m.png');
 export const BUTTON_COLOR = '[#FB8500]';

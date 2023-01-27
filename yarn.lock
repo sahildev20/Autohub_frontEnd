@@ -6517,6 +6517,13 @@ react-native-maps@^1.3.2:
   dependencies:
     "@types/geojson" "^7946.0.8"
 
+react-native-onesignal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/react-native-onesignal/-/react-native-onesignal-4.5.0.tgz"
+  integrity sha512-9rocNYJXrAFUk1yG50vu0D7aYEeX8imEA3qDeBT+iwyFpy6E1xXNy3z9OPazzeuGi9/YaseEAiswpKBlaoJV3A==
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-paper@^4.12.5:
   version "4.12.5"
   resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-4.12.5.tgz"

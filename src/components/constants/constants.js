@@ -19,3 +19,13 @@ export const logOutUser = async () => {
   await Keychain.resetGenericPassword();
   await AsyncStorage.removeItem('userId');
 };
+
+export const saveSignalUser = async playerId => {
+  await AsyncStorage.setItem('playerId', playerId);
+  return true;
+};
+
+export const getSignalUser = async () => {
+  const playerId = await AsyncStorage.getItem('playerId', playerId);
+  return playerId;
+};
