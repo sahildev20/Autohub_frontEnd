@@ -15,6 +15,13 @@ export const retrieveJWTUser = async () => {
   }
 };
 
+export const retrieveJWTUserId = async () => {
+  const credentials = await Keychain.getGenericPassword();
+  if (credentials) {
+    const userId = credentials.username;
+    return userId;
+  }
+};
 export const logOutUser = async () => {
   await Keychain.resetGenericPassword();
   await AsyncStorage.removeItem('userId');

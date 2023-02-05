@@ -1,60 +1,49 @@
+import {retrieveJWTUserId} from '../../components/constants/constants';
 import {StyleSheet, Text, SafeAreaView, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import tw from 'twrnc';
 import {Item} from '../../components/small/MyUiComponents';
 import {useNavigation} from '@react-navigation/native';
+import AnimatedLottieView from 'lottie-react-native';
+import React, {useEffect, useState} from 'react';
+import {SUCCESS_BLUE} from '../../assets/index';
+import Loading from '../../components/Loading';
 import {useSelector} from 'react-redux';
+import {MY_BACKEND_URL} from '@env';
+import {Button} from '@rneui/base';
+import axios from 'axios';
+import tw from 'twrnc';
 import {
   selectDropAddress,
   selectPickupAddress,
   selectRideInformation,
 } from '../../slices/navSlice';
-import Loading from '../../components/Loading';
-import AnimatedLottieView from 'lottie-react-native';
-import * as assets from '../../assets/index';
-import {MY_BACKEND_URL} from '@env';
-import {Button} from '@rneui/base';
 
 const BookingScreen = ({route}) => {
-  const {driverId, rideType} = route.params;
-  const [loaded, setLoaded] = useState(false);
-  const [ride, setRide] = useState(null);
   const rideInformation = useSelector(selectRideInformation);
   const pickupCoordinates = useSelector(selectPickupAddress);
   const dropCoordinates = useSelector(selectDropAddress);
   const distance = Math.round(rideInformation[0] / 1000);
   const time = Math.round(rideInformation[1] / 60);
+  const [loaded, setLoaded] = useState(false);
+  const {driverId, rideType} = route.params;
+  const [ride, setRide] = useState(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    bookRide();
+  }, []);
 
   async function bookRide() {
     try {
+      const userId = await retrieveJWTUserId();
       const res = await axios.post(
         `${MY_BACKEND_URL}/bookRide`,
         {
-          location: 'default',
-          latitude: pickupCoordinates[1],
-          longitude: pickupCoordinates[0],
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      console.log(`your shared ride response is : ${res}`);
-    } catch (error) {}
-  }
-  async function bookAuto() {
-    try {
-      const res = await axios.post(
-        `${MY_BACKEND_URL}/bookAuto`,
-        {
-          driverId,
+          pickupCoordinates,
+          dropCoordinates,
           userId,
-          rideType: 'personal',
+          driverId,
+          rideType,
         },
-
         {
           headers: {
             'Content-Type': 'application/json',
@@ -62,21 +51,14 @@ const BookingScreen = ({route}) => {
         },
       );
       if (res) {
-        console.log(`your personal ride response is : ${res}`);
         setLoaded(true);
+        console.log(`your personal ride response is : ${res}`);
       }
     } catch (error) {
-      console.log(`your personal ride error is : ${error}`);
       setLoaded(true);
+      console.log(`your personal ride error is : ${error}`);
     }
   }
-  useEffect(() => {
-    if (rideType == 'shared') {
-      bookRide();
-    } else {
-      bookAuto();
-    }
-  }, []);
 
   //loading untill we find a driver , after that we will return the below safe area view
   return loaded ? (
@@ -84,7 +66,7 @@ const BookingScreen = ({route}) => {
       <View style={tw` items-center mb-4`}>
         <AnimatedLottieView
           style={{width: 250}}
-          source={assets.SUCCESS_BLUE}
+          source={SUCCESS_BLUE}
           autoPlay
           speed={0.6}
           loop={true}
@@ -94,7 +76,7 @@ const BookingScreen = ({route}) => {
         Booking Successful.
       </Text>
       <View style={tw``}>
-        <Text style={tw`text-4 text-black font-bold`}>Ride Details</Text>
+        <Text style={tw`text-4 text-black font-bold mb-10`}>Ride Details</Text>
         <Item head="Arriving Time" tail={`${time} Minutes`} icon="A" />
         <Item head="Distance" tail={`${distance} KMS`} icon="B" />
       </View>
@@ -104,11 +86,14 @@ const BookingScreen = ({route}) => {
           {justifyContent: 'space-between', marginTop: 1},
         ]}>
         <Button
+          raised
           title="Cancel"
           onPress={() => alert('Are you sure you wanna cancel')}
         />
         <Button
           title="Track"
+          raised
+          color={`warning`}
           onPress={() => navigation.navigate('trackRide')}
         />
       </View>
