@@ -23,6 +23,8 @@ import axios from 'axios';
 import {MY_BACKEND_URL} from '@env';
 import {useSelector} from 'react-redux';
 import {selectRideInformation} from '../slices/navSlice';
+import {Button} from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AvailableAutos = () => {
   //using use state to hold the selected auto id which will be send to server later
@@ -34,25 +36,25 @@ const AvailableAutos = () => {
   const navigation = useNavigation();
 
   const rideInfo = useSelector(selectRideInformation);
-  //fetch vehicle data from server
 
+  //fetch vehicle data from server
   async function fetchData() {
-    axios
-      .get(`${MY_BACKEND_URL}/vehicles`)
-      .then(response => {
+    try {
+      const response = await axios.get(`${MY_BACKEND_URL}/vehicles`);
+      if (response) {
         setData(response.data);
-        setInterval(() => {
+        setTimeout(() => {
           setLoading(false);
-        }, 1000);
-      })
-      .catch(err => {
-        console.log({err: err.message});
-      });
+        }, 2000);
+      }
+    } catch (error) {
+      return console.log({error: error.message});
+    }
   }
   useEffect(() => {
     fetchData();
   }, []);
-
+  //handle button press
   //a component which describes the details of an available auto
   const RideTypeItem = ({item, selected, setSelected}) => {
     return (
@@ -115,21 +117,22 @@ const AvailableAutos = () => {
               />
             )}
             // footer to give some space below
-            ListFooterComponent={() => <View style={tw`h-15`} />}
+            ListFooterComponent={() => <View style={tw`h-5`} />}
           />
         </View>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Drivers', {autoid: selected})}
-          //Button to proceed to next screen and completer booking
+        <Button
+          title="Confirm"
+          raised
           disabled={selected ? false : true}
-          style={[
-            tw` m-4 p-2 w-40 rounded-full `,
-            styles.nextButton,
-            {backgroundColor: selected ? '#fbb74d' : 'gray'},
-          ]}>
-          <Text style={tw`text-5 self-center text-white`}>Confirm</Text>
-        </TouchableOpacity>
+          ViewComponent={LinearGradient}
+          linearGradientProps={{
+            colors: ['#fbb74d', 'red'],
+            start: {x: 0, y: 0.5},
+            end: {x: 1, y: 0.5},
+          }}
+          onPress={() => navigation.navigate('Drivers', {rideType: selected})}
+        />
       </View>
     </SafeAreaView>
   );

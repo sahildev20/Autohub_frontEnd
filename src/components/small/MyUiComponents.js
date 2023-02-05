@@ -32,11 +32,13 @@ const MyUiComponents = ({}) => {
 
 const Item = ({head, tail, icon}) => {
   return (
-    <View style={tw`flex-row items-center mt-2 p-2 bg--100`}>
+    <View style={tw`flex-row mb-6`}>
       <Avatar style={tw`h-20-px w-20-px rounded-full bg-blue-100 mr-4`} />
-      <Text style={tw`text-4 text-black`}>{head}</Text>
-      <View style={tw`pl-5 `}>
-        <Text style={tw`text-4 font-bold text-black`}>{tail}</Text>
+      <View style={tw`pl-4 `}>
+        <Text style={tw`text-4 text-black uppercase tracking-wider`}>
+          {head}
+        </Text>
+        <Text style={tw`text-4`}>{tail}</Text>
       </View>
     </View>
   );

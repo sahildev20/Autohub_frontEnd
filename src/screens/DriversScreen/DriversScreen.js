@@ -1,135 +1,98 @@
 /* eslint-disable prettier/prettier */
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-  Image,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {FlatList, SafeAreaView, Text, View} from 'react-native';
+
+import React, {useEffect, useRef, useState} from 'react';
 import tw from 'twrnc';
 import axios from 'axios';
 import {MY_BACKEND_URL} from '@env';
 import {useSelector} from 'react-redux';
 import {selectPickupAddress, selectDropAddress} from '../../slices/navSlice';
-import {AUTO_IMAGE} from '../../assets';
+import Loading from '../../components/Loading';
 
-function Driver({item}) {
-  return (
-    <TouchableOpacity style={tw`flex-row p-8 items-center`}>
-      <Image
-        style={[tw`w-60=px h-60-px mr-10`, {resizeMode: 'contain'}]}
-        source={{
-          uri: AUTO_IMAGE,
-        }}
-      />
-      <View>
-        <Text style={tw`text-20px font-400 mb-2`}>{item.vehicleNumber}</Text>
-        <Text>{item.name}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-}
+import Driver from '../../components/small/Driver';
+
 const DriversScreen = ({route}) => {
-  const [data, setData] = useState(null);
-  const {autoid} = route.params;
+  const {rideType} = route.params;
+  const [loaded, setLoaded] = useState(false);
+  const [data, setData] = useState([]);
   const pickupCoordinates = useSelector(selectPickupAddress);
   const dropCoordinates = useSelector(selectDropAddress);
+  const message = useRef('');
 
   async function getAvailableDrivers() {
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         `${MY_BACKEND_URL}/driver/getAvailableDrivers`,
         {
-          location: 'alafia',
-          latitude: pickupCoordinates[1],
-          longitude: pickupCoordinates[0],
-          sendMeThis: '_id vehicleNumber name',
+          pickupCoordinates: pickupCoordinates,
+          dropCoordinates: dropCoordinates,
+          rideType: rideType,
         },
         {
           headers: {
             'Content-Type': 'application/json',
           },
         },
-      )
-      .then(res => {
-        const availableDrivers = res.data;
+      );
+      if (response) {
+        const availableDrivers = response.data;
         setData(availableDrivers);
-      })
-      .catch(err => {
-        console.log('error:', err);
-      });
-  }
-
-  async function getAvailableRides() {
-    axios
-      .post(
-        `${MY_BACKEND_URL}/getAvailableRides`,
-        {
-          location: 'alafia',
-          userId: 'abcdefg',
-          pickupCoordinates,
-          dropCoordinates,
-          sendMeThis: '_id vehicleNumber name',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-      .then(res => {
-        console.log({data: res.data});
-        // setData(availableDrivers);
-      })
-      .catch(err => {
-        console.log('error:', err);
-      });
+        return setLoaded(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status == 404) {
+        message.current = `No online drivers found at the moment`;
+      } else {
+        message.current = `Something went wrong please try again later .`;
+      }
+      setData([]);
+      return setLoaded(true);
+    }
   }
 
   //fetch nearest driver from server
   useEffect(() => {
-    if (autoid == 'Personal') {
-      getAvailableDrivers();
-    } else {
-      getAvailableRides();
-    }
+    getAvailableDrivers();
   }, []);
 
-  return (
-    <SafeAreaView style={tw`flex-1 `}>
-      <Text style={tw`text-6 pl-8 mt-10  font-bold`}>Available Auto</Text>
-      <TextInput
-        placeholder="Search by Auto number or Driver name"
-        style={[
-          tw`m-4 pl-10 rounded-full`,
-          {borderWidth: 2, borderColor: 'gray'},
-        ]}
-      />
-      <View>
-        <FlatList
-          data={data}
-          keyExtractor={item => item._id}
-          ItemSeparatorComponent={() => (
-            <View style={tw`h-1px bg-orange-300`}></View>
+  //main screen return
+  if (loaded !== true) {
+    return <Loading />;
+  } else {
+    return (
+      <SafeAreaView style={tw`flex-1 bg-[#F5F5F5]`}>
+        <Text style={tw`text-6 pl-8 mt-6 text-black font-bold`}>
+          Available Drivers
+        </Text>
+        <Text style={tw`text-3 pl-8 pb-4 mt-4 `}>
+          Please select an auto and confirm booking.
+        </Text>
+        <View style={tw``}>
+          {data !== [] && (
+            <FlatList
+              data={data}
+              keyExtractor={item => item._id}
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={() => (
+                <View
+                  style={tw`h-6-px bg-[#E64A19] w-20 self-center rounded-full`}></View>
+              )}
+              renderItem={({item}) => <Driver item={item} rideType />}
+              ListFooterComponent={() => (
+                <View style={tw`h-25`}>
+                  <Text style={tw`text-red-900 self-center`}>
+                    {message.current}
+                  </Text>
+                </View>
+              )}
+            />
           )}
-          renderItem={({item}) => <Driver item={item} />}
-          ListFooterComponent={() => (
-            <View style={tw`h-50 pl-8`}>
-              <Text style={tw`text-red-900 self-center`}>
-                Opps ! Looks like you have reach the end
-              </Text>
-            </View>
-          )}
-        />
-      </View>
-    </SafeAreaView>
-  );
+        </View>
+        <View></View>
+      </SafeAreaView>
+    );
+  }
 };
 
 export default DriversScreen;
 
-const styles = StyleSheet.create({});

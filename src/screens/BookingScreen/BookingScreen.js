@@ -1,11 +1,12 @@
 import {StyleSheet, Text, SafeAreaView, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import tw from 'twrnc';
-import {Item, Mybutton} from '../../components/small/MyUiComponents';
+import {Item} from '../../components/small/MyUiComponents';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {
+  selectDropAddress,
   selectPickupAddress,
   selectRideInformation,
 } from '../../slices/navSlice';
@@ -13,23 +14,23 @@ import Loading from '../../components/Loading';
 import AnimatedLottieView from 'lottie-react-native';
 import * as assets from '../../assets/index';
 import {MY_BACKEND_URL} from '@env';
+import {Button} from '@rneui/base';
 
 const BookingScreen = ({route}) => {
-  const [loading, setLoading] = React.useState(true);
-  const [nearestAuto, setNearestAuto] = React.useState(null);
-
+  const {driverId, rideType} = route.params;
+  const [loaded, setLoaded] = useState(false);
+  const [ride, setRide] = useState(null);
   const rideInformation = useSelector(selectRideInformation);
   const pickupCoordinates = useSelector(selectPickupAddress);
+  const dropCoordinates = useSelector(selectDropAddress);
   const distance = Math.round(rideInformation[0] / 1000);
   const time = Math.round(rideInformation[1] / 60);
   const navigation = useNavigation();
 
-  async function getNearestAuto() {
-    //fetch nearest driver from server
-
-    axios
-      .post(
-        `${MY_BACKEND_URL}/driver/getNearest`,
+  async function bookRide() {
+    try {
+      const res = await axios.post(
+        `${MY_BACKEND_URL}/bookRide`,
         {
           location: 'default',
           latitude: pickupCoordinates[1],
@@ -40,22 +41,45 @@ const BookingScreen = ({route}) => {
             'Content-Type': 'application/json',
           },
         },
-      )
-      .then(response => {
-        console.log('data :', response.data.nearestDriver);
-        setNearestAuto(response.data.nearestDriver);
-        setLoading(false);
-      })
-      .catch(err => console.log(err));
+      );
+      console.log(`your shared ride response is : ${res}`);
+    } catch (error) {}
   }
-  React.useEffect(() => {
-    getNearestAuto();
+  async function bookAuto() {
+    try {
+      const res = await axios.post(
+        `${MY_BACKEND_URL}/bookAuto`,
+        {
+          driverId,
+          userId,
+          rideType: 'personal',
+        },
+
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (res) {
+        console.log(`your personal ride response is : ${res}`);
+        setLoaded(true);
+      }
+    } catch (error) {
+      console.log(`your personal ride error is : ${error}`);
+      setLoaded(true);
+    }
+  }
+  useEffect(() => {
+    if (rideType == 'shared') {
+      bookRide();
+    } else {
+      bookAuto();
+    }
   }, []);
 
   //loading untill we find a driver , after that we will return the below safe area view
-  return loading ? (
-    <Loading />
-  ) : (
+  return loaded ? (
     <SafeAreaView style={tw`flex-1 bg-white p-8  `}>
       <View style={tw` items-center mb-4`}>
         <AnimatedLottieView
@@ -71,8 +95,6 @@ const BookingScreen = ({route}) => {
       </Text>
       <View style={tw``}>
         <Text style={tw`text-4 text-black font-bold`}>Ride Details</Text>
-        <Item head="Vehicle Number" tail={nearestAuto.vehicleNumber} icon="C" />
-        <Item head="Sitting Capacity" tail={nearestAuto.seats} icon="C" />
         <Item head="Arriving Time" tail={`${time} Minutes`} icon="A" />
         <Item head="Distance" tail={`${distance} KMS`} icon="B" />
       </View>
@@ -81,23 +103,21 @@ const BookingScreen = ({route}) => {
           tw`flex-row flex-1 items-center`,
           {justifyContent: 'space-between', marginTop: 1},
         ]}>
-        <Mybutton
-          width={150}
+        <Button
           title="Cancel"
           onPress={() => alert('Are you sure you wanna cancel')}
-          color={assets.BUTTON_COLOR}
         />
-        <Mybutton
+        <Button
           title="Track"
-          width={150}
           onPress={() => navigation.navigate('trackRide')}
-          color={assets.BUTTON_COLOR}
         />
       </View>
       <Text style={tw`text-12-px text-center`}>
         Please wait at your location, you will get your ride soon.
       </Text>
     </SafeAreaView>
+  ) : (
+    <Loading />
   );
 };
 
