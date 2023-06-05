@@ -28,18 +28,19 @@ const Stack = createNativeStackNavigator();
 
 const TabNavigator = () => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const dispatch = useDispatch();
   let user = useSelector(selectUser);
 
-  const getLogin = async user => {
-    if (user == true || user == false) {
+  const getLogin = async userrr => {
+    console.log('user in slice ', userrr);
+    if (userrr == true || userrr == false) {
       const cred = await retrieveJWTUser();
+      console.log('credentials : ', cred);
       if (!cred) {
         setIsLoggedIn(false);
       } else {
         setTimeout(() => {
           setIsLoggedIn(true);
-        }, 3000);
+        }, 1000);
       }
     }
   };

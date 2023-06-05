@@ -5,7 +5,9 @@ export const SUCCESS_ORANGE = require('./successorange.json');
 export const CAR = require('./movingCAr.json');
 export const LOGO_SMALL = require('./logo-s.png');
 export const LOGO_MEDIUM = require('./logo-m.png');
+export const PROFILE_BACK = require('./profileback.png');
 export const BUTTON_COLOR = '[#FB8500]';
+export const BUTTON_COLORR = '#FB8500';
 export const BG_COLOR_LIGHT = '#FFD60A';
 export const AUTO_IMAGE =
   'https://firebasestorage.googleapis.com/v0/b/autometa-2611.appspot.com/o/rickshaw.png?alt=media&token=c2e4e093-1d67-43a9-9a97-e02767c843f6';
@@ -15,3 +17,5 @@ export const LOC_CIRCLE =
   'https://firebasestorage.googleapis.com/v0/b/autometa-2611.appspot.com/o/location%2Fcircle.png?alt=media&token=cf5c5ce5-8deb-4442-a583-0e7a8ebaca07';
 export const LOC_DROP =
   'https://firebasestorage.googleapis.com/v0/b/autometa-2611.appspot.com/o/location%2Fdrop.png?alt=media&token=ced6c7cb-00ac-4864-a661-eae7bf2500b0';
+export const P_PIC =
+  'https://firebasestorage.googleapis.com/v0/b/autometa-2611.appspot.com/o/profilepic%2Fsaif.jpg?alt=media&token=ea18c94a-06e5-46be-b730-b85247e75b0f';

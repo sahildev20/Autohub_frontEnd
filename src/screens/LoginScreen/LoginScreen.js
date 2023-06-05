@@ -1,178 +1,208 @@
-import {Text, View, SafeAreaView, TextInput, Button} from 'react-native';
-import React from 'react';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+import React, {useState} from 'react';
 import tw from 'twrnc';
 import {MY_BACKEND_URL} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import {saveJWTUser} from '../../components/constants/constants';
+import {getOTP, saveJWTUser} from '../../components/constants/constants';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../../slices/navSlice';
+import {Mybutton} from '../../components/small/MyUiComponents';
+import Loading from '../../components/Loading';
+import {BUTTON_COLOR, LOGO_SMALL} from '../../assets';
+
+//////
 
 const LoginScreen = () => {
-  const [oldUser, setOldUser] = React.useState(false);
+  const [mobile, setMobile] = useState(0);
+  const [otp, setOtp] = useState(0);
+  const [error, setError] = useState('');
+  const [loaded, setLoaded] = useState(true);
+
+  const [showOtpInput, setShowOtpInput] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  function SignUp() {
-    const [phone, setPhone] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [confirmPassword, setConfirmPassword] = React.useState('');
-    const [error, setError] = React.useState('');
+  //error handling
 
-    async function handleSignUp() {
-      if (!(phone && password && confirmPassword)) {
-        setError('All fields are require');
-        return;
-      }
-      if (!(phone.length == 10)) {
-        setError('Invalid phone number');
-        return;
-      }
+  const handleError = ({title, msg}) =>
+    Alert.alert(
+      'Invalid Phone Number',
+      `${msg}`,
+      [
+        {
+          text: 'Got it',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
 
-      if (!(password == confirmPassword)) {
-        setError('password and confirm password should be same');
-        return;
-      }
+  const handleMobileChange = newMobile => {
+    setMobile(newMobile);
+  };
 
-      try {
-        const res = await axios.post(`${MY_BACKEND_URL}/user/signup`, {
-          mobile: phone,
-          password: password,
-        });
-        await saveJWTUser(res.data.token, res.data._id);
-        dispatch(setUser(true));
-        return;
-      } catch (err) {
-        console.log({err});
-        if (err.response == undefined) {
-          setError('Something went wrong');
-          return;
-        } else if (err.response.status == 409) {
-          setError('You already have an account please login');
-        } else {
-          setError('Something Went Wrong Please try again later');
-        }
+  const handleOtpChange = newOtp => {
+    setOtp(newOtp);
+  };
+
+  const handleSendOtpPress = async () => {
+    if (mobile.length !== 10) {
+      handleError('please enter 10 digit valid mobile number');
+      return;
+    }
+    try {
+      const sentOTP = await getOTP(mobile);
+      if (sentOTP == 1) {
+        setShowOtpInput(true);
+      } else {
+        setError('Unable to send OTP please try again later');
       }
+    } catch (error) {
+      console.error(error);
+      handleError('something went wrong ', error.message);
+    }
+  };
+
+  const handleLoginPress = async () => {
+    if (otp.length !== 6) {
+      handleError('please enter valid 6 digit otp');
+      return;
+    }
+    try {
+      const res = await axios.post(
+        `${MY_BACKEND_URL}/user/login`,
+
+        {
+          mobile: Number(mobile),
+          password: Number(otp),
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (!res) {
+        console.log('no response');
+      }
+      setLoaded(false);
+      await saveJWTUser(res.data.token, res.data.userId);
+      dispatch(setUser(true));
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.message);
+      handleError(`${error.message}`);
+      al;
     }
 
-    //return signup screen
+    //   if (error.response == undefined) {
+    //     return setError('something went wrong please try again later');
+    //   } else {
+    //     let code = error.response.status;
+    //     if (code) {
+    //       if (code == 401) {
+    //         return setError('Invalid credentials');
+    //       } else {
+    //         return setError('something went wrong please try again later');
+    //       }
+    //     } else {
+    //       return setError('something went wrong please try again later');
+    //     }
+    //   }
+    // }
+  };
+  if (!loaded) {
     return (
-      <View style={tw`flex-1`}>
-        <Text style={tw`font-bold text-6 text-black mb-8`}>
-          Create new Account
-        </Text>
-        <TextInput
-          style={tw``}
-          placeholder="Phone Number"
-          keyboardType="number-pad"
-          value={phone}
-          onChangeText={t => setPhone(t)}
-        />
-
-        <TextInput
-          style={tw``}
-          placeholder="Password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={p => setPassword(p)}
-        />
-
-        <TextInput
-          style={tw``}
-          secureTextEntry={true}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={t => setConfirmPassword(t)}
-        />
-
-        <Button title="Create Account" onPress={handleSignUp} />
-
-        <Text style={tw`font-bold text-3 text-black`}>{error}</Text>
-      </View>
+      <SafeAreaView style={tw`bg-white flex-1 items-center justify-center`}>
+        <Loading />
+      </SafeAreaView>
     );
-  }
-
-  function LogIn() {
-    const [phone, setPhone] = React.useState('');
-    const [error, setError] = React.useState('');
-    const [password, setPassword] = React.useState('');
-
-    async function handleLogin() {
-      if (!(phone && password)) {
-        setError('all field are required');
-        return;
-      }
-      if (!(phone.length == 10)) {
-        setError('invalid phone number');
-        return;
-      }
-      try {
-        const res = await axios.post(`${MY_BACKEND_URL}/user/login`, {
-          mobile: phone,
-          password: password,
-        });
-        console.log(res);
-        await saveJWTUser(res.data.token, res.data._id, res.data.mobile);
-        dispatch(setUser(true));
-        return;
-      } catch (error) {
-        console.log({error});
-        if (error.response == undefined) {
-          return setError('something went wrong please try again later');
-        } else {
-          let code = error.response.status;
-          if (code) {
-            if (code == 401) {
-              return setError('Invalid credentials');
-            } else {
-              return setError('something went wrong please try again later');
-            }
-          } else {
-            return setError('something went wrong please try again later');
-          }
-        }
-      }
-    }
-
-    return (
-      <View style={tw`flex-1`}>
-        <Text style={tw`font-bold text-6 text-black mb-8`}>LogIn</Text>
-        <TextInput
-          style={tw``}
-          value={phone}
-          keyboardType="number-pad"
-          onChangeText={t => setPhone(t)}
-          placeholder="Phone Number"
-        />
-        <TextInput
-          style={tw``}
-          value={password}
-          secureTextEntry={true}
-          onChangeText={p => setPassword(p)}
-          placeholder="Password"
-        />
-        <Button title="Login" onPress={() => handleLogin()} />
-        <Text style={tw`font-bold text-3 text-black`}>{error}</Text>
-      </View>
-    );
-  }
-
-  function handleToggleScreen() {
-    setOldUser(!oldUser);
   }
   return (
-    <SafeAreaView style={tw`flex-1 p-8 bg-white`}>
-      {oldUser ? <LogIn /> : <SignUp />}
-      <Text style={tw`mb-4 text-3 font-bold`}>
-        {oldUser
-          ? `If you don't have an account`
-          : `If you already have an account`}
-      </Text>
-      <Button
-        color="orange"
-        title={oldUser ? 'SignUp' : 'LogIn'}
-        onPress={handleToggleScreen}
-      />
+    <SafeAreaView style={tw`bg-white flex-1 p-8`}>
+      <Image style={{width: 100, resizeMode: 'contain'}} source={LOGO_SMALL} />
+      {/* <CustomHeading text="Log In" /> */}
+
+      {!showOtpInput && (
+        <>
+          {/* <Text style={tw`text-4 text-black `}>Enter Mobile Number</Text> */}
+          <Text style={tw`text-5 text-black mb-8 mt-10 font-bold`}>
+            Please enter your mobile number to continue..
+          </Text>
+          <View
+            style={tw`border-2 border-orange-500 rounded pl-2 flex-row items-center `}>
+            <Text style={tw`text-4 font-bold `}>+91</Text>
+            <TextInput
+              style={tw`text-4 w-100`}
+              keyboardType="number-pad"
+              value={mobile}
+              maxLength={10}
+              placeholder="Phone Number"
+              onChangeText={handleMobileChange}
+            />
+          </View>
+          <Mybutton
+            title="Send OTP"
+            color={BUTTON_COLOR}
+            style={{width: '100%', borderRadius: 4}}
+            onPress={handleSendOtpPress}
+          />
+          <View
+            style={[
+              tw`items-center content-center self-center mt-10`,
+              // {position: 'absolute', bottom: 10, padding: 20},
+            ]}>
+            <Text style={tw`text-4 text-center text-black`}>
+              Proceeding with mobile number means you are agree to our
+              <Text style={tw`text-blue-500`}> terms and conditions.</Text>
+            </Text>
+          </View>
+        </>
+      )}
+      {showOtpInput && (
+        <>
+          <Text style={tw`text-4 text-black mt-10 font-bold`}>
+            An OTP has been sent to +91{mobile}
+          </Text>
+          <View style={tw`border-2 border-orange-500 rounded pl-2 mt-4 `}>
+            <TextInput
+              style={tw`text-4 w-100`}
+              placeholder="Enter OTP"
+              maxLength={6}
+              keyboardType="number-pad"
+              value={otp}
+              onChangeText={handleOtpChange}
+            />
+          </View>
+          <Mybutton
+            title="DONE"
+            style={{width: '100%', borderRadius: 4}}
+            onPress={handleLoginPress}
+          />
+          <View
+            style={[
+              tw`items-center content-center self-center mt-10`,
+              // {position: 'absolute', bottom: 10, padding: 20},
+            ]}>
+            <Text style={tw`text-4 text-center text-black`}>
+              If you have not recieved the OTP click
+              <Text style={tw`text-blue-500`}> Resend</Text>
+            </Text>
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
 };

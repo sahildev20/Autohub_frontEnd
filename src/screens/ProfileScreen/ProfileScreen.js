@@ -6,6 +6,8 @@ import {
   FlatList,
   Button,
   TextInput,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
@@ -19,6 +21,8 @@ import {useDispatch} from 'react-redux';
 import axios from 'axios';
 import {MY_BACKEND_URL} from '@env';
 import {setUser} from '../../slices/navSlice';
+import {ScrollView} from 'react-native';
+import {yellow100} from 'react-native-paper/lib/typescript/styles/colors';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -35,7 +39,7 @@ const ProfileScreen = () => {
 
       setUserInfo({mobile: res.data.mobile});
     } catch (error) {
-      console.log(error);
+      console.log(`${error} : error in profile screen : 20`);
     }
   }
   React.useEffect(() => {
@@ -71,56 +75,81 @@ const ProfileScreen = () => {
   }
   const UserDetails = ({user}) => {
     if (!user) {
-      return null;
+      return <Text>looks like you are not logged in !</Text>;
     }
     return (
-      <View editable={true}>
-        {editable ? (
-          <TextInput
-            value={user.mobile}
-            onChangeText={text => {
-              handleChange();
-            }}
-          />
-        ) : (
-          <Text>{user.mobile}</Text>
-        )}
+      <View>
+        <Text style={tw`text-lg font-bold`}>+91{user.mobile}</Text>
       </View>
     );
   };
 
-  return (
-    <SafeAreaView style={tw`flex-1 p-8 pt-0`}>
-      <CustomHeading text="Profile" />
-      <View style={tw`flex-1 items-center justify-center`}>
-        <AnimatedLottieView
-          style={{width: 150}}
-          source={assests.PANDA}
-          autoPlay
-          loop
-        />
-        <Text>Your profile is awesome but invisible right now !</Text>
-      </View>
-      <UserDetails user={userInfo} />
-      <View style={tw`flex-1 `}>
-        <Button
-          title="Edit Profile"
-          color="black"
-          onPress={() => setEditable(true)}
-        />
+  if (userInfo == null) {
+    return null;
+  } else {
+    return (
+      <SafeAreaView style={tw`flex-1 bg-white `}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{width: '100%'}}>
+          <ImageBackground
+            source={assests.PROFILE_BACK}
+            resizeMode="cover"
+            style={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{
+                resizeMode: 'cover',
+                height: 150,
+                width: 150,
+                position: 'relative',
+                bottom: -75,
+                borderRadius: 100,
+                borderWidth: 4,
+                borderColor: 'orange',
+              }}
+              source={{uri: assests.P_PIC}}
+            />
+          </ImageBackground>
+          <View style={tw`h-20 mt-20 items-center`}>
+            <UserDetails user={userInfo} />
+          </View>
 
-        <Button onPress={() => handleLogOut()} title="Log Out" color="orange" />
-        <Button
-          onPress={() => navigation.navigate('trackRide')}
-          title="Track"
-          color="orange"
-        />
-        <Button onPress={() => handlePush()} title="Log Out" color="orange" />
-      </View>
-    </SafeAreaView>
-  );
+          {/* basics details */}
+          <View style={[tw`h-50 bg-gray-100 m-4 rounded-2`, {}]}>
+            <Text style={tw`text-lg font-bold ml-2`}>Basic Details</Text>
+            <View style={tw`flex-row`}>
+              <Text style={tw`text-lg font-bold ml-2`}>Age</Text>
+              <Text style={tw`text-lg font-bold ml-20`}>18</Text>
+            </View>
+            <View style={tw`flex-row`}>
+              <Text style={tw`text-lg font-bold ml-2`}>Gender</Text>
+              <Text style={tw`text-5 font-bold ml-20`}>Male</Text>
+            </View>
+          </View>
+
+          {/* ride details */}
+          <View style={[tw`h-80 bg-white m-4 rounded-2`, {}]}>
+            <Text style={tw`text-lg font-bold ml-2`}>Ride Details</Text>
+          </View>
+          <View style={[tw`flex justify-between`]}>
+            <Button
+              onPress={() => handleLogOut()}
+              title="Log Out"
+              color="orange"
+            />
+            {/* <Button
+              onPress={() => navigation.navigate('trackRide')}
+              title="Track"
+              color="orange"
+            /> */}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 };
 
 export default ProfileScreen;
-
-const styles = StyleSheet.create({});

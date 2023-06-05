@@ -36,6 +36,7 @@
     "react-native-radar": "^3.5.7",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^3.18.2",
+    "react-native-svg": "^13.8.0",
     "react-native-vector-icons": "^9.2.0",
     "react-redux": "^8.0.5",
     "twrnc": "^3.4.1"

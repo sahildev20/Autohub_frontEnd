@@ -81,7 +81,7 @@ const AvailableAutos = () => {
         </View>
         <View style={tw`flex-1 items-end justify-end p-2`}>
           <Text style={tw`font-bold text-black`}>
-            ₹ {Math.round(rideInfo[0] * item.ratePerKM)}
+            ₹ {Math.round((rideInfo[0] / 1000) * item.ratePerKM)}
           </Text>
         </View>
       </TouchableOpacity>

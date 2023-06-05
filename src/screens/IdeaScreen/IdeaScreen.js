@@ -7,15 +7,19 @@ import {BUTTON_COLOR} from '../../assets';
 
 const IdeaScreen = () => {
   return (
-    <SafeAreaView style={tw`flex-1 p-8 pt-0 bg-white`}>
-      <CustomHeading text="Sharing is Caring" />
-
+    <SafeAreaView style={tw`flex-1 p-4 pt-0 bg-indigo-100`}>
+      <Text style={tw`text-5 text-black mt-3`}>
+        Help us so we can give you back !
+      </Text>
       <View
-        style={[tw`pl-3 shadow-sm mt-6 mb-6 h-40 text-16px`, {borderWidth: 1}]}>
+        style={[
+          tw`pl-3  mt-6 mb-6 h-90 bg-white rounded`,
+          {borderWidth: 1, borderColor: 'indigo'},
+        ]}>
         <TextInput
           style={tw`text-4`}
           multiline={true}
-          placeholder="Tell me what you have in your mind ?"
+          placeholder="Tell us what you have in your mind ..."
         />
       </View>
       <Text style={tw`text-11px font-bold mt-10 self-center`}>
